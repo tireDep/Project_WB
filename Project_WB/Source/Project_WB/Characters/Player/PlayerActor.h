@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CharacterActorBase.h"
+#include "Project_WB/Characters/CharacterBase/CharacterActorBase.h"
 #include "PlayerActor.generated.h"
 
 UCLASS()
@@ -15,10 +15,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	// iteninfo
-	// playercontroller
 	
 public:
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	// iteninfo
+	// playercontroller
 };
