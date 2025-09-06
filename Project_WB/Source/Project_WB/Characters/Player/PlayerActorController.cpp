@@ -4,7 +4,6 @@
 #include "API_DebugUtils.h"
 #include "Kismet/GameplayStatics.h"
 #include "Project_WB/GameCamera/GameCamera.h"
-#include "API_DebugUtils.h"
 
 APlayerActorController::APlayerActorController()
 {
@@ -30,8 +29,7 @@ void APlayerActorController::SwitchCamera(AGameCamera* NewCamera, float Transiti
 
 	CurrentCamera = NewCamera;
 	SetViewTargetWithBlend( NewCamera, TransitionTime );
-
-	FString InfoString = "SwitchCamera Switched to camera[" + NewCamera->GetName() + "]";
+	
 	FAPI_DebugUtils::ShowInfo("SwitchCamera Switched to camera[" + NewCamera->GetName() + "]");
 }
 

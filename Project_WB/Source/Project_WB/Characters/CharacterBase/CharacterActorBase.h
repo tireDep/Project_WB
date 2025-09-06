@@ -8,6 +8,7 @@
 
 class UPaperSpriteComponent;
 class UBoxComponent;
+class UMouseInteractionComponent;
 
 UENUM(BlueprintType)
 enum class ECharacterEnumType : uint8
@@ -29,11 +30,17 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void OnCharacterMouseOver(AActor* Actor);
+    
+	UFUNCTION()
+	void OnCharacterMouseExit(AActor* Actor);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UBoxComponent* RootBoxComponent;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UPaperSpriteComponent* CharacterSprite;
-    
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UBoxComponent* InteractionCollision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CharacterInfo", meta = (Priority = -10))
 	FText CharacterName;
@@ -47,6 +54,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CharacterInfo")
 	ECharacterEnumType CharacterEnumType;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UMouseInteractionComponent* MouseInteractionComponent;
+	
 public:
 	virtual void Tick(float DeltaTime) override;
 };
