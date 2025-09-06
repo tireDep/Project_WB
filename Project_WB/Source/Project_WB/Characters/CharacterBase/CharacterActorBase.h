@@ -29,12 +29,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	UFUNCTION()
-	void OnCharacterMouseOver(AActor* Actor);
-    
-	UFUNCTION()
-	void OnCharacterMouseExit(AActor* Actor);
+	
+	virtual void OnCharacterMouseOver(AActor* Actor) {}
+	virtual void OnCharacterMouseExit(AActor* Actor) {}
+	virtual void OnCharacterMousePressed(AActor* Actor) {}
+	virtual void OnCharacterMouseReleased(AActor* Actor) {}
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* RootBoxComponent;

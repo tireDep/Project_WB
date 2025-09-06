@@ -10,8 +10,6 @@ UMouseInteractionComponent::UMouseInteractionComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	TargetSpriteComponent = nullptr;
-	ShowOutLine = true;
-	ChangeScale = true;
 }
 
 void UMouseInteractionComponent::BeginPlay()
@@ -51,20 +49,6 @@ void UMouseInteractionComponent::HandleMouseOverEvent(UPrimitiveComponent* Selec
 		return;
 
 	// >> test
-	if ( ShowOutLine == true )
-	{
-		FAPI_DebugUtils::ShowInfo( L"Over_OutLineDraw" );
-		// SelectComp->SetCustomDepthStencilValue(1);
-		// SelectComp->SetRenderCustomDepth(true);	
-	}
-
-	if ( ChangeScale == true )
-	{
-		FAPI_DebugUtils::ShowInfo( L"Over_ChangeScale" );
-	}
-
-	// todo : TOOLTIP
-	
 	// <<
 	
 	OnMouseOverEvent.Broadcast(GetOwner());
@@ -76,6 +60,7 @@ void UMouseInteractionComponent::HandleMouseExitEvent(UPrimitiveComponent* Selec
 		return;
 	
 	// >> test
+	FAPI_DebugUtils::ShowInfo( L"HandleMouseExitEvent" );
 	// <<
 	
 	OnMouseExitEvent.Broadcast(GetOwner());
@@ -86,6 +71,8 @@ void UMouseInteractionComponent::HandleMouseClickEvent(UPrimitiveComponent* Sele
 	if (IsValid(SelectComp) == false)
 		return;
 	
+	FAPI_DebugUtils::ShowInfo( L"HandleMouseClickEvent" );
+	
 	OnMouseClickEvent.Broadcast(GetOwner());
 }
 
@@ -93,7 +80,7 @@ void UMouseInteractionComponent::HandleMouseReleaseEvent(UPrimitiveComponent* Se
 {
 	if (IsValid(SelectComp) == false)
 		return;
-	
+
+	FAPI_DebugUtils::ShowInfo( L"HandleMouseReleaseEvent" );
 	OnMouseReleaseEvent.Broadcast(GetOwner());
 }
-

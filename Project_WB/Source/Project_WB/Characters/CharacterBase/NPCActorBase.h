@@ -16,6 +16,18 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	virtual void OnCharacterMouseOver(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnCharacterMouseExit(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnCharacterMousePressed(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnCharacterMouseReleased(AActor* Actor) override;
+	
 	// ItemCheckInfo
 
 public:
