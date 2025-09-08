@@ -13,12 +13,12 @@ void FAPI_DebugUtils::ShowWarning(const FString& WarningMessage, float Duration)
 
 void FAPI_DebugUtils::ShowInfo(const FString& InfoMessage, float Duration)
 {
-	OutputMessage(InfoMessage, FColor::Blue, TEXT("INFO"), Duration);
+	OutputMessage(InfoMessage, FColor::Green, TEXT("INFO"), Duration);
 }
 
 void FAPI_DebugUtils::ShowSuccess(const FString& SuccessMessage, float Duration)
 {
-	OutputMessage(SuccessMessage, FColor::Green, TEXT("SUCCESS"), Duration);
+	OutputMessage(SuccessMessage, FColor::Blue, TEXT("SUCCESS"), Duration);
 }
 
 bool FAPI_DebugUtils::IsPluginAvailable()
