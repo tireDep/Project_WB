@@ -8,7 +8,7 @@
 
 ACharacterActorBase::ACharacterActorBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	RootBoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("RootBoxComponent"));
 	RootComponent = RootBoxComponent;

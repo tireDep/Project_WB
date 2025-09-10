@@ -20,8 +20,12 @@ public:
 	bool LoadItemTable();
 
 	// 사용자 정의 구조체를 에디터에 노출시킬때 에러 발생
-	// UFUNCTION(BlueprintGetter, Category = "Item Manager")
-	const FItemTableData* GetItemTableData(const int32 ItemID) const;
+	const FItemTableData* GetItemTableData(const int ItemID) const;
+
+	// todo :
+	// 직접 노출시킬 수 없어, 필요한값만 노출 시키는 함수로 래핑
+	UFUNCTION(BlueprintGetter, Category = "Item Manager")
+	int GetItemID(const int ItemID) const;
 	
 private:
 	UPROPERTY()

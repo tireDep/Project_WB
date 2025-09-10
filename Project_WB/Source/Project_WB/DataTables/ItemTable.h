@@ -9,7 +9,7 @@ struct FItemTableData : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Table")
-	int32 ItemID;
+	int ItemID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Table")
 	FName ItemName;
@@ -35,5 +35,12 @@ struct FItemTableData : public FTableRowBase
 		ItemSprite = nullptr;
 		ItemIcon = nullptr;
 	}
+
+	int GetItemID() const { return ItemID; }
+	FName GetItemName() const { return ItemName; }
+	FName GetItemDescription() const { return ItemDescription; }
+	TMap<int32, int32> GetInteractionInfo() { return InteractionInfo; }
+	UPaperSprite* GetItemSprite() const { return ItemSprite; }
+	UTexture2D* GetItemIcon() const { return ItemIcon; }
 };
 

@@ -4,14 +4,7 @@
 
 UItemManagerSubsystem::UItemManagerSubsystem()
 {
-	// >> 생성자에서 사용 가능한 로드
-	FString ItemDataPath = TEXT("DataTable'/Game/DataTables/DT_ItemTable.DT_ItemTable'");
-	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ItemData(*ItemDataPath);
-	if ( DT_ItemData.Succeeded() == false )
-	{
-		FAPI_DebugUtils::ShowError(L"UItemManagerSubsystem::LoadItemTable() DT_ItemTable find fail!");
-	}
-	// <<
+
 }
 
 void UItemManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -36,7 +29,7 @@ bool UItemManagerSubsystem::LoadItemTable()
 		return false;
 	}
 
-	// >> 런타임에 사용 가능한 로드
+	// 런타임에 사용 가능한 로드
 	UDataTable* LoadedTable = Cast<UDataTable>(
 	StaticLoadObject(UDataTable::StaticClass(),
 		nullptr,
@@ -47,7 +40,6 @@ bool UItemManagerSubsystem::LoadItemTable()
 		FAPI_DebugUtils::ShowError(L"UItemManagerSubsystem::LoadItemTable() DT_ItemTable find fail!");
 		return false;
 	}
-	// <<
 
 	ItemTable.Empty();
 	TArray<FItemTableData*> AllRows;
@@ -65,7 +57,7 @@ bool UItemManagerSubsystem::LoadItemTable()
 	return true;
 }
 
-const FItemTableData* UItemManagerSubsystem::GetItemTableData(const int32 ItemID) const
+const FItemTableData* UItemManagerSubsystem::GetItemTableData(const int ItemID) const
 {
 	if (ItemTable.Contains(ItemID) == true)
 	{
@@ -73,5 +65,14 @@ const FItemTableData* UItemManagerSubsystem::GetItemTableData(const int32 ItemID
 	}
 	
 	return nullptr;
+}
+
+int UItemManagerSubsystem::GetItemID(const int ItemID) const
+{
+	const FItemTableData* ItemTableData = GetItemTableData(ItemID);
+	if ( ItemTableData == nullptr )
+		return 0;
+
+	return ItemTableData->GetItemID();
 }
 
