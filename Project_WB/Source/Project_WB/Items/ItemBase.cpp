@@ -25,20 +25,23 @@ void AItemBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// todo : 
-	// 로드 후 처리 필요
-	// const FItemTableData* ItemTableData = UItemManagerSubsystem().GetItemTableData( ItemID ); 
-	// if ( ItemTableData == nullptr )
-	// {
-	// 	FAPI_DebugUtils::ShowError("Item LoadFail! ItemName : " + ItemName.ToString() + "ItmeID : " + FString::FromInt(ItemID) );
-	// 	return;
-	// }
-	// 
-	// ItemID = ItemTableData->ItemID;
-	// ItemName = ItemTableData->ItemName;
-	// ItemDescription = ItemTableData->ItemDescription;
-	// InteractionInfo = ItemTableData->InteractionInfo;
-	// ItemSprite->SetSprite(ItemTableData->ItemSprite);
+	UItemManagerSubsystem* ItemManger = GetGameInstance()->GetSubsystem<UItemManagerSubsystem>();
+	if ( ItemManger == nullptr )
+		return;
+
+	// 테이블 데이터 세팅
+	const FItemTableData* ItemTableData = ItemManger->GetItemTableData( ItemID ); 
+	if ( ItemTableData == nullptr )
+	{
+		FAPI_DebugUtils::ShowError("Item LoadFail! ItemName : " + ItemName.ToString() + "ItmeID : " + FString::FromInt(ItemID) );
+		return;
+	}
+	
+	ItemID = ItemTableData->ItemID;
+	ItemName = ItemTableData->ItemName;
+	ItemDescription = ItemTableData->ItemDescription;
+	InteractionInfo = ItemTableData->InteractionInfo;
+	ItemSprite->SetSprite(ItemTableData->ItemSprite);
 }
 
 void AItemBase::Tick(float DeltaTime)
