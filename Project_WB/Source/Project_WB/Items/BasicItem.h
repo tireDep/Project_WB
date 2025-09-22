@@ -16,6 +16,20 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	// 마우스 입력 처리
+	UFUNCTION()
+	virtual void OnItemMouseOver(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnItemMouseExit(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnItemMouseClick(AActor* Actor) override;
+
+	UFUNCTION()
+	virtual void OnItemMouseReleased(AActor* Actor) override;
+	
+
 public:
 	virtual void Tick(float DeltaTime) override;
 };

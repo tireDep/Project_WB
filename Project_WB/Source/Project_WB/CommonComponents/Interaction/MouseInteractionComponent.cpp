@@ -49,6 +49,7 @@ void UMouseInteractionComponent::HandleMouseOverEvent(UPrimitiveComponent* Selec
 		return;
 
 	// >> test
+	// FAPI_DebugUtils::ShowInfo( L"HandleMouseOverEvent" );
 	// <<
 	
 	OnMouseOverEvent.Broadcast(GetOwner());
@@ -60,7 +61,7 @@ void UMouseInteractionComponent::HandleMouseExitEvent(UPrimitiveComponent* Selec
 		return;
 	
 	// >> test
-	FAPI_DebugUtils::ShowInfo( L"HandleMouseExitEvent" );
+	// FAPI_DebugUtils::ShowInfo( L"HandleMouseExitEvent" );
 	// <<
 	
 	OnMouseExitEvent.Broadcast(GetOwner());
@@ -71,7 +72,7 @@ void UMouseInteractionComponent::HandleMouseClickEvent(UPrimitiveComponent* Sele
 	if (IsValid(SelectComp) == false)
 		return;
 	
-	FAPI_DebugUtils::ShowInfo( L"HandleMouseClickEvent" );
+	// FAPI_DebugUtils::ShowInfo( L"HandleMouseClickEvent" );
 	
 	OnMouseClickEvent.Broadcast(GetOwner());
 }
@@ -81,6 +82,6 @@ void UMouseInteractionComponent::HandleMouseReleaseEvent(UPrimitiveComponent* Se
 	if (IsValid(SelectComp) == false)
 		return;
 
-	FAPI_DebugUtils::ShowInfo( L"HandleMouseReleaseEvent" );
+	// FAPI_DebugUtils::ShowInfo( L"HandleMouseReleaseEvent" );
 	OnMouseReleaseEvent.Broadcast(GetOwner());
 }

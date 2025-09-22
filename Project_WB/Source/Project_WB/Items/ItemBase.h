@@ -24,7 +24,7 @@ protected:
 	// 해당 방식으로 선언하면, 상속받은 클래스에서 선언을 하지 않아도 빌드 에러가 나지 않음에 유의!
 	virtual void OnItemMouseOver(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMouseOver,);
 	virtual void OnItemMouseExit(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMouseExit,);
-	virtual void OnItemMousePressed(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMousePressed,);
+	virtual void OnItemMouseClick(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMousePressed,);
 	virtual void OnItemMouseReleased(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMouseReleased,);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
