@@ -11,12 +11,12 @@ class UBoxComponent;
 class UMouseInteractionComponent;
 
 UENUM(BlueprintType)
-enum class ECharacterEnumType : uint8
+enum class ECharacterType : uint8
 {
-	Invalid UMETA(DisplayName = "Invalid"),
-	Player UMETA(DisplayName = "Player"),
-	NPC UMETA(DisplayName = "NPC"),
-	Max UMETA(DisplayName = "Max"),
+	CT_Invalid UMETA(DisplayName = "CT_Invalid"),
+	CT_Player UMETA(DisplayName = "CT_Player"),
+	CT_NPC UMETA(DisplayName = "CT_NPC"),
+	CT_Max UMETA(DisplayName = "CT_Max"),
 };
 
 UCLASS()
@@ -51,7 +51,7 @@ protected:
 	int CharacterID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CharacterInfo")
-	ECharacterEnumType CharacterEnumType;
+	ECharacterType CharacterEnumType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UMouseInteractionComponent* MouseInteractionComponent;
