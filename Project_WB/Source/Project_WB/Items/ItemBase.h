@@ -49,7 +49,7 @@ protected:
 
 	// npc키 값, 상호작용 대사 키 값
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	TMap<int, int> InteractionInfo;
+	TMap<int, int> DialogInfo;
 
 public:
 	virtual void Tick(float DeltaTime) override;
