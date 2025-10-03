@@ -43,45 +43,38 @@ void UMouseInteractionComponent::SetTargetSprite(UPaperSpriteComponent* PaperSpr
 	TargetSpriteComponent->OnReleased.AddDynamic( this, &UMouseInteractionComponent::HandleMouseReleaseEvent);
 }
 
+// 마우스 오버 이벤트
 void UMouseInteractionComponent::HandleMouseOverEvent(UPrimitiveComponent* SelectComp)
 {
 	if (IsValid(SelectComp) == false)
 		return;
-
-	// >> test
-	// FAPI_DebugUtils::ShowInfo( L"HandleMouseOverEvent" );
-	// <<
 	
 	OnMouseOverEvent.Broadcast(GetOwner());
 }
 
+// 마우스 오버 해제 이벤트
 void UMouseInteractionComponent::HandleMouseExitEvent(UPrimitiveComponent* SelectComp)
 {
 	if (IsValid(SelectComp) == false)
 		return;
 	
-	// >> test
-	// FAPI_DebugUtils::ShowInfo( L"HandleMouseExitEvent" );
-	// <<
-	
 	OnMouseExitEvent.Broadcast(GetOwner());
 }
 
+// 마우스 클릭 이벤트
 void UMouseInteractionComponent::HandleMouseClickEvent(UPrimitiveComponent* SelectComp, FKey ButtonPressed)
 {
 	if (IsValid(SelectComp) == false)
 		return;
 	
-	// FAPI_DebugUtils::ShowInfo( L"HandleMouseClickEvent" );
-	
 	OnMouseClickEvent.Broadcast(GetOwner());
 }
 
+// 마우스 클릭 해제 이벤트
 void UMouseInteractionComponent::HandleMouseReleaseEvent(UPrimitiveComponent* SelectComp, FKey ButtonPressed)
 {
 	if (IsValid(SelectComp) == false)
 		return;
-
-	// FAPI_DebugUtils::ShowInfo( L"HandleMouseReleaseEvent" );
+	
 	OnMouseReleaseEvent.Broadcast(GetOwner());
 }

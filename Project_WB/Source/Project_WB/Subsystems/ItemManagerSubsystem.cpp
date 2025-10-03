@@ -57,6 +57,7 @@ bool UItemManagerSubsystem::LoadItemTable()
 	return true;
 }
 
+// 아이템 테이블 정보 리턴
 const FItemTableData* UItemManagerSubsystem::GetItemTableData(const int ItemID) const
 {
 	if (ItemTable.Contains(ItemID) == true)
@@ -67,6 +68,7 @@ const FItemTableData* UItemManagerSubsystem::GetItemTableData(const int ItemID) 
 	return nullptr;
 }
 
+// 아이템 아이디 테스트용
 int UItemManagerSubsystem::GetItemID(const int ItemID) const
 {
 	const FItemTableData* ItemTableData = GetItemTableData(ItemID);

@@ -42,10 +42,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnMouseReleaseDelegate OnMouseReleaseEvent;
 
-	// >> todo
-	// over : 커서 변경
-	// click : 파티클 or ui 띄워주기
-
 private:
 	UPROPERTY()
 	UPaperSpriteComponent* TargetSpriteComponent;

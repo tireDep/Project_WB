@@ -25,6 +25,7 @@ void AGameCamera::BeginPlay()
 	Apply2DCameraSetting();
 }
 
+// 2D 카메라 설정
 void AGameCamera::Apply2DCameraSetting() const
 {
 	UCameraComponent* CameraComp = GetCameraComponent();

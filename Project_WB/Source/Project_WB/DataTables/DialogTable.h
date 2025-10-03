@@ -8,20 +8,25 @@ struct FDialogTableData : public FTableRowBase
 {
 	GENERATED_BODY()
 
+	// 키
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	int DialogID; // 키
+	int DialogID;
 
+	// 대화 표시 스프라이트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	UPaperSprite* DialogSprite; // 대화 표시 스프라이트
+	UPaperSprite* DialogSprite;
 
+	// 대화 표시 이름
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	FString DialogShowName; // 대화 표시 이름
+	FString DialogShowName;
 
+	// 대화 내용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	FString DialogString; // 대화 내용
+	FString DialogString;
 
+	// 다음 다이얼로그 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	int NextDialogID; // 다음 다이얼로그 ID
+	int NextDialogID;
 
 	FDialogTableData()
 	{

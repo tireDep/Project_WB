@@ -2,6 +2,7 @@
 
 #include "CharacterEnumType.generated.h"
 
+// 캐릭터 타입
 UENUM(BlueprintType)
 enum class ECharacterType : uint8
 {
@@ -11,6 +12,7 @@ enum class ECharacterType : uint8
 	CT_Max UMETA(DisplayName = "CT_Max"),
 };
 
+// 캐릭터 이넘 ID
 UENUM(BlueprintType)
 enum class ECharacterID  : uint8
 {

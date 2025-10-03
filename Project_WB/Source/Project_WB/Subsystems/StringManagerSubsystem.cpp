@@ -26,8 +26,6 @@ void UStringManagerSubsystem::Deinitialize()
 
 bool UStringManagerSubsystem::LoadDialogTable()
 {
-	// FString DataPath = TEXT("DataTable'/Game/DataTables/DT_DialogTable.DT_DialogTable");
-	
 	if ( DialogTable.IsEmpty() == false )
 	{
 		FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadDialogTable() already load!");
@@ -60,6 +58,7 @@ bool UStringManagerSubsystem::LoadDialogTable()
 	return true;
 }
 
+// 다이얼로그 테이블 리턴
 const FDialogTableData* UStringManagerSubsystem::GetDialogTableData(int KeyIndex)
 {
 	const auto FindData = DialogTable.Find(KeyIndex);

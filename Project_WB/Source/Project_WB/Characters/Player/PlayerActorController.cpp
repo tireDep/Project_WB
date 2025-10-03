@@ -20,6 +20,7 @@ void APlayerActorController::BeginPlay()
 	SetupLevelCamera();
 }
 
+// 카메라 변경
 void APlayerActorController::SwitchCamera(AGameCamera* NewCamera, float TransitionTime)
 {
 	if (NewCamera == nullptr)
@@ -34,6 +35,7 @@ void APlayerActorController::SwitchCamera(AGameCamera* NewCamera, float Transiti
 	FAPI_DebugUtils::ShowInfo("SwitchCamera Switched to camera[" + NewCamera->GetName() + "]");
 }
 
+// 카메라 설정
 void APlayerActorController::SwitchCameraByTag(FName CameraTag, float TransitionTime)
 {
 	TArray<AActor*> FoundCameras;
@@ -56,6 +58,7 @@ void APlayerActorController::SwitchCameraByTag(FName CameraTag, float Transition
 	}
 }
 
+// 레벨 카메라 설정
 void APlayerActorController::SetupLevelCamera()
 {
 	SwitchCameraByTag(FindCameraTagName, 0.0f);

@@ -36,8 +36,6 @@ void ABasicItem::OnItemMouseExit(AActor* Actor)
 
 void ABasicItem::OnItemMouseClick(AActor* Actor)
 {
-	// todo : Actor 인자 필요한지 전체 체크 필요함..
-	
 	AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
 	if (FindActor == nullptr)
 		return;

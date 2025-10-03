@@ -22,25 +22,21 @@ void ANPCActorBase::BeginPlay()
 void ANPCActorBase::OnCharacterMouseOver(AActor* Actor)
 {
 	Super::OnCharacterMouseOver(Actor);
-	FAPI_DebugUtils::ShowInfo( L"----------------Over Character!" );
 }
 
 void ANPCActorBase::OnCharacterMouseExit(AActor* Actor)
 {
 	Super::OnCharacterMouseExit(Actor);
-	FAPI_DebugUtils::ShowInfo( L"----------------Exit Character!" );
 }
 
 void ANPCActorBase::OnCharacterMousePressed(AActor* Actor)
 {
 	Super::OnCharacterMousePressed(Actor);
-	FAPI_DebugUtils::ShowInfo( L"----------------Presseed Character!" );
 }
 
 void ANPCActorBase::OnCharacterMouseReleased(AActor* Actor)
 {
 	Super::OnCharacterMouseReleased(Actor);
-	FAPI_DebugUtils::ShowInfo( L"----------------Released Character!" );
 }
 
 void ANPCActorBase::Tick(float DeltaTime)
