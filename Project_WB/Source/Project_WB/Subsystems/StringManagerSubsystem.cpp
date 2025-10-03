@@ -55,8 +55,16 @@ bool UStringManagerSubsystem::LoadDialogTable()
 			continue;
 
 		DialogTable.Add(Row->GetDialogID(), *Row);
-		FAPI_DebugUtils::ShowInfo(L"Loaded Data Table : " + Row->GetDialogID());
 	}
 
 	return true;
+}
+
+const FDialogTableData* UStringManagerSubsystem::GetDialogTableData(int KeyIndex)
+{
+	const auto FindData = DialogTable.Find(KeyIndex);
+	if ( FindData == nullptr )
+		return nullptr;
+
+	return FindData;
 }

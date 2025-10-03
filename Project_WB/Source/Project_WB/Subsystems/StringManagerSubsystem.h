@@ -18,6 +18,8 @@ public:
 
 	bool LoadDialogTable();
 
+	const FDialogTableData* GetDialogTableData(int KeyIndex);
+
 private:
 	UPROPERTY()
 	TMap<int, FDialogTableData> DialogTable;

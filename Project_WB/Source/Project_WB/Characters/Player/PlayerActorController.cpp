@@ -7,7 +7,8 @@
 
 APlayerActorController::APlayerActorController()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	// PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	
 	CurrentCamera = nullptr;
 }

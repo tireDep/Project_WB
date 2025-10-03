@@ -4,20 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "../../DataTables/CharacterEnumType.h"
 #include "CharacterActorBase.generated.h"
 
 class UPaperSpriteComponent;
 class UBoxComponent;
 class UMouseInteractionComponent;
-
-UENUM(BlueprintType)
-enum class ECharacterType : uint8
-{
-	CT_Invalid UMETA(DisplayName = "CT_Invalid"),
-	CT_Player UMETA(DisplayName = "CT_Player"),
-	CT_NPC UMETA(DisplayName = "CT_NPC"),
-	CT_Max UMETA(DisplayName = "CT_Max"),
-};
 
 UCLASS()
 class PROJECT_WB_API ACharacterActorBase : public AActor
@@ -26,6 +18,8 @@ class PROJECT_WB_API ACharacterActorBase : public AActor
 
 public:
 	ACharacterActorBase();
+
+	ECharacterID GetCharacterID() const { return CharacterID; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -48,7 +42,7 @@ protected:
 	FText CharacterDescription;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CharacterInfo", meta = (Priority = -5))
-	int CharacterID;
+	ECharacterID CharacterID;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CharacterInfo")
 	ECharacterType CharacterEnumType;

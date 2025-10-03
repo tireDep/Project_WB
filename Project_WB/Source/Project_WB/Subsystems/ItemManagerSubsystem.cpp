@@ -1,6 +1,7 @@
 ﻿
 #include "ItemManagerSubsystem.h"
 #include "API_DebugUtils.h"
+#include "DataTableEditorUtils.h"
 
 UItemManagerSubsystem::UItemManagerSubsystem()
 {
@@ -40,7 +41,7 @@ bool UItemManagerSubsystem::LoadItemTable()
 		FAPI_DebugUtils::ShowError(L"UItemManagerSubsystem::LoadItemTable() DT_ItemTable find fail!");
 		return false;
 	}
-
+	
 	ItemTable.Empty();
 	TArray<FItemTableData*> AllRows;
 	LoadedTable->GetAllRows<FItemTableData>(TEXT("ItemManager_GetAllRows"), AllRows);
@@ -51,7 +52,6 @@ bool UItemManagerSubsystem::LoadItemTable()
 			continue;
 	
 		ItemTable.Add(Row->ItemID, *Row);
-		FAPI_DebugUtils::ShowInfo(L"Loaded Item Table : " + Row->ItemName.ToString());
 	}
 	
 	return true;
