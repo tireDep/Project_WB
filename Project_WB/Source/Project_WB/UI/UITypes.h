@@ -7,8 +7,7 @@ UENUM(BlueprintType)
 enum class EUIType : uint8
 {
 	UT_Invalid = 0,
-	UT_PopupMessage,		// 팝업 메시지
-	UT_ToastMessage,		// 토스트 메시지
+	UT_Dialog = 1,
 	UT_Max
 };
 
@@ -16,7 +15,7 @@ UENUM(BlueprintType)
 enum class EUILayer : uint8
 {
 	UL_Invalid = 0,
-	UL_Message,				// 메시지(팝업, 토스트)
+	UL_Dialog = 1,
 	UI_Max
 };
 

@@ -16,30 +16,13 @@ void UUIWidgetBase::SetShowUI(bool bShow)
 	if (bIsShow == false )
 	{
 		SetVisibility(ESlateVisibility::Collapsed);
-
-		// 자동 종료 타이머 설정
-		if (AutoCloseTimer.IsValid())
-			GetWorld()->GetTimerManager().ClearTimer(AutoCloseTimer);
-
+		
 		OnUIClosedEvent();
 		OnUIClosed.Broadcast(this);
-		
 		return;	
 	}
 
 	SetVisibility(ESlateVisibility::Visible);
-	
-	// 자동 종료 타이머 설정
-	if (UIConfig.AutoCloseTime > 0.0f)
-	{
-		GetWorld()->GetTimerManager().SetTimer(
-			AutoCloseTimer,
-			this,
-			&UUIWidgetBase::HandleAutoClose,
-			UIConfig.AutoCloseTime,
-			false
-			);
-	}
 	
 	OnUIOpenedEvent();
 	OnUIOpened.Broadcast(this);
@@ -56,11 +39,6 @@ void UUIWidgetBase::NativeConstruct()
 // RemoveFromParent(RemoveFromViewport)시 호출. Viewport에서 remove될 때마다 호출됨
 void UUIWidgetBase::NativeDestruct()
 {
-	if (AutoCloseTimer.IsValid())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(AutoCloseTimer);
-	}
-	
 	Super::NativeDestruct();
 }
 

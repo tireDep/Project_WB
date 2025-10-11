@@ -28,6 +28,14 @@ struct FDialogTableData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
 	int NextDialogID;
 
+	// 획득 아이템 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
+	int GainItemID;
+
+	// 이미지 스프라이트
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
+	UPaperSprite* DialogImageSprite;
+
 	FDialogTableData()
 	{
 		Init();

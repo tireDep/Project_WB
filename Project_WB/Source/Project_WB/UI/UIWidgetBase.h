@@ -62,11 +62,10 @@ protected:
 	FonUIStateChange OnUIClosed;
 	
 
-private:
+protected:
 	UPROPERTY()
 	bool bIsShow;					// 표시 여부
 
-	FTimerHandle AutoCloseTimer;	// 자동 종료 타이머
-
-	
+	UPROPERTY()
+	EUIType UIType;					// UI 타입
 };
