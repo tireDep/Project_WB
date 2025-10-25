@@ -22,7 +22,7 @@ public:
 
 	// UI 표시 상태 리턴
 	UFUNCTION(BlueprintPure, Category="UI")
-	bool GetShowUI() const { return bIsShow;	}
+	bool GetShowUI() const { return UIConfig.bIsShow;	}
 
 	// UI 타입 리턴
 	UFUNCTION(BlueprintPure, Category="UI")
@@ -37,7 +37,6 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
-	void HandleAutoClose();
 
 	// >> 블루프린트 구현 이벤트들
 	UFUNCTION(BlueprintImplementableEvent, Category="UI")
@@ -60,12 +59,4 @@ protected:
 
 	UPROPERTY(BlueprintAssignable)
 	FonUIStateChange OnUIClosed;
-	
-
-protected:
-	UPROPERTY()
-	bool bIsShow;					// 표시 여부
-
-	UPROPERTY()
-	EUIType UIType;					// UI 타입
 };

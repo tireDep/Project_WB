@@ -7,7 +7,7 @@ UENUM(BlueprintType)
 enum class EUIType : uint8
 {
 	UT_Invalid = 0,
-	UT_Dialog = 1,
+	UT_Dialog,
 	UT_Max
 };
 
@@ -15,7 +15,7 @@ UENUM(BlueprintType)
 enum class EUILayer : uint8
 {
 	UL_Invalid = 0,
-	UL_Dialog = 1,
+	UL_Dialog,
 	UI_Max
 };
 
@@ -32,22 +32,21 @@ struct FUIConfig
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	EUILayer UILayer;
 
+	// 표시 여부
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (EditCondition = false, EditConditionHides))
+	bool bIsShow;
+
 	// 모달 여부
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	bool bIsModal;
+	
+	// // ESC로 닫기 가능 여부
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	// bool bCanCloseEsc;
 
-	// 자동 닫기 시간, 0 이면 수동
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	float AutoCloseTime;
-
-	// >>
-	// ESC로 닫기 가능 여부
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	bool bCanCloseEsc;
-
-	// 단일 인스턴스 여부
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	bool bIsSingleton;
+	// // 단일 인스턴스 여부
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (EditConditionHides))
+	// bool bIsSingleton;
 
 	FUIConfig()
 	{
@@ -58,9 +57,9 @@ struct FUIConfig
 	{
 		UIType = EUIType::UT_Invalid;
 		UILayer = EUILayer::UL_Invalid;
+		bIsShow = false;
 		bIsModal = false;
-		AutoCloseTime = 0.0f;
-		bCanCloseEsc = false;
-		bIsSingleton = false;
+		// bCanCloseEsc = false;
+		// bIsSingleton = false;
 	}
 };

@@ -3,17 +3,17 @@
 
 UUIWidgetBase::UUIWidgetBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	bIsShow = false;
+	UIConfig.Init();
 }
 
 // UI 표시 제어
 void UUIWidgetBase::SetShowUI(bool bShow)
 {
-	if ( bIsShow == bShow)
+	if (UIConfig.bIsShow == bShow)
 		return;
 
-	bIsShow = bShow;
-	if (bIsShow == false )
+	UIConfig.bIsShow = bShow;
+	if (UIConfig.bIsShow == false )
 	{
 		SetVisibility(ESlateVisibility::Collapsed);
 		
@@ -45,17 +45,11 @@ void UUIWidgetBase::NativeDestruct()
 // 위젯 키 입력 받아오기
 FReply UUIWidgetBase::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
 {
-	if ( UIConfig.bCanCloseEsc == true && InKeyEvent.GetKey() == EKeys::Escape )
-	{
-		SetShowUI(false);
-		return FReply::Handled();
-	}
+	// if ( UIConfig.bCanCloseEsc == true && InKeyEvent.GetKey() == EKeys::Escape )
+	// {
+	// 	SetShowUI(false);
+	// 	return FReply::Handled();
+	// }
 	
 	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
-}
-
-// 자동 종료 타이머 호출 함수
-void UUIWidgetBase::HandleAutoClose()
-{
-	SetShowUI(false); 
 }
