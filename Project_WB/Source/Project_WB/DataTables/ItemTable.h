@@ -22,7 +22,7 @@ struct FItemTableData : public FTableRowBase
 
 	// character's ID, dialog ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Table")
-	TMap<ECharacterID, int32> DialogInfo;
+	TMap<ECharacterID, int> DialogInfo;
 
 	// 이미지
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Graphic")
@@ -34,18 +34,16 @@ struct FItemTableData : public FTableRowBase
 
 	FItemTableData()
 	{
+		Init();
+	}
+
+	void Init()
+	{
 		ItemID = 0;
 		ItemName = FName("DefaultName");
 		ItemDescription = FName("DefaultDesc");
 		ItemSprite = nullptr;
 		ItemIcon = nullptr;
 	}
-
-	int GetItemID() const { return ItemID; }
-	FName GetItemName() const { return ItemName; }
-	FName GetItemDescription() const { return ItemDescription; }
-	TMap<ECharacterID, int32> GetDialogInfo() { return DialogInfo; }
-	UPaperSprite* GetItemSprite() const { return ItemSprite; }
-	UTexture2D* GetItemIcon() const { return ItemIcon; }
 };
 

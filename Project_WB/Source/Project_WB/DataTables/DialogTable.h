@@ -1,58 +1,128 @@
 ﻿#pragma once
+#include "CharacterEnumType.h"
 #include "Engine/DataTable.h"
 #include "PaperSpriteComponent.h"
 #include "DialogTable.generated.h"
 
+// 조건 타입 열거형
+UENUM(BlueprintType)
+enum class EConditionType : uint8
+{
+	CT_HAS_ITEM,	// 아이템 보유
+	CT_PROGRESS,	// 진행도
+	CT_NONE,		// 조건 없음
+};
+
+// 다음 대사 세팅용 조건 구조체
 USTRUCT(BlueprintType)
-struct FDialogTableData : public FTableRowBase
+struct FDialogCondition
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
+	EConditionType	ConditionType;		// 대사 조건 타입
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
+	FString			ConditionValue;		// 대사 조건 값
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
+	int             ScriptID;			// 스크립트 ID
+
+	FDialogCondition()
+	{
+		Init();
+	}
+
+	void Init()
+	{
+		ConditionType = EConditionType::CT_NONE;
+		ConditionValue = "";
+		ScriptID = 0;
+	}
+};
+
+// 대사 설정 테이블 구조체
+USTRUCT(BlueprintType)
+struct FScriptTableData : public FTableRowBase
 {
 	GENERATED_BODY()
 
 	// 키
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	int DialogID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	int ScriptID;
 
 	// 대화 표시 스프라이트
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	UPaperSprite* DialogSprite;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	UPaperSprite* ScriptSprite;
 
 	// 대화 표시 이름
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	FString DialogShowName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	FString ScriptShowName;
 
 	// 대화 내용
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	FString DialogString;
-
-	// 다음 다이얼로그 ID
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	int NextDialogID;
-
-	// 획득 아이템 ID
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	int GainItemID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	FString ScriptString;
 
 	// 이미지 스프라이트
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialog Table")
-	UPaperSprite* DialogImageSprite;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	UPaperSprite* ScriptImageSprite;
 
-	FDialogTableData()
+	// 획득 아이템 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	int GainItemID;
+
+	// TODO : 
+	// 툴팁 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	int TooltipID;
+
+	// TODO
+	// 추가효과가 붙는다면 이쪽에 추가
+
+	// // 조건 분기 다이얼로그
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	// TArray<FDialogCondition> DialogConditions;
+
+	FScriptTableData()
 	{
 		Init();
 	}
 	
 	void Init()
 	{
-		DialogID = 0;
-		DialogSprite = nullptr;
-		DialogShowName = FString("Default");
-		DialogString = FString("Default");
-		NextDialogID = 0;
+		ScriptID = 0;
+		ScriptSprite = nullptr;
+		ScriptShowName = FString("Default");
+		ScriptString = FString("Default");
+		ScriptImageSprite = nullptr;
+		GainItemID = 0;
+		TooltipID = 0;
+		// DialogConditions.Empty();
 	}
+};
 
-	int GetDialogID() const { return DialogID; }
-	const UPaperSprite* GetDialogSprite() const { return DialogSprite; }
-	FString GetDialogShowName() const { return DialogShowName; }
-	FString GetDialogString() const { return DialogString; }
-	int GetNextDialogID() const { return NextDialogID; }
+// 대화문 설정 구조체
+USTRUCT(BlueprintType)
+struct FDialogueTableData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	// 대사 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	int StartScriptID;
+
+	// 조건 분기 다이얼로그
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	TArray<FDialogCondition> NextDialogConditions;
+
+	FDialogueTableData()
+	{
+		Init();
+	}
+	
+	void Init()
+	{
+		StartScriptID = 0;
+		NextDialogConditions.Empty();
+	}
 };

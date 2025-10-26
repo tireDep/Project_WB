@@ -1,8 +1,5 @@
 ﻿
 #include "StringManagerSubsystem.h"
-
-#include <string>
-
 #include "API_DebugUtils.h"
 
 UStringManagerSubsystem::UStringManagerSubsystem()
@@ -10,58 +7,117 @@ UStringManagerSubsystem::UStringManagerSubsystem()
 
 }
 
+// 초기화
 void UStringManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	LoadDialogTable();
+	LoadAll_TextTable();
 }
 
+// 초기화 해제
 void UStringManagerSubsystem::Deinitialize()
 {
-	DialogTable.Empty();
+	ScriptTableData.Empty();
 	
 	Super::Deinitialize();
 }
 
-bool UStringManagerSubsystem::LoadDialogTable()
+// 전체 대사, 대화 테이블 로드
+bool UStringManagerSubsystem::LoadAll_TextTable()
 {
-	if ( DialogTable.IsEmpty() == false )
+	bool bResult = true;
+	if ( LoadScriptTable() == false )
 	{
-		FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadDialogTable() already load!");
-		return false;
+		bResult = false;
 	}
 
-	UDataTable* LoadTable = Cast<UDataTable>(
+	if ( LoadDialogueTable() == false )
+	{
+		bResult = false;
+	}
+	
+	return bResult;
+}
+
+// 캐릭터별 대사 로드
+bool UStringManagerSubsystem::LoadScriptTable()
+{
+	ScriptTableData.Empty();
+
+	// DefaultGame.ini에 작성된 파일명으로 로드
+	for (int Index = 0; Index < ScriptTablePaths.Num(); Index++ )
+	{
+		UDataTable* LoadTable = Cast<UDataTable>(
 		StaticLoadObject(UDataTable::StaticClass(),
 			nullptr,
-			TEXT("/Game/DataTables/DT_DialogTable.DT_DialogTable"))
+			*ScriptTablePaths[Index].ToString())
 			);
-	if ( LoadTable == nullptr )
-	{
-		FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadDialogTable() failed!");
-		return false;
-	}
+		if ( LoadTable == nullptr )
+		{
+			FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadScriptTable() failed!");
+			return false;
+		}
+	
+		TArray<FScriptTableData*> AllRows;
+		LoadTable->GetAllRows<FScriptTableData>(TEXT("Script_GetAllRows"), AllRows);
 
-	DialogTable.Empty();
-	TArray<FDialogTableData*> AllRows;
-	LoadTable->GetAllRows<FDialogTableData>(TEXT("DialogManager_GetAllRows"), AllRows);
-
-	for (FDialogTableData* Row : AllRows)
-	{
-		if ( Row == nullptr )
-			continue;
-
-		DialogTable.Add(Row->GetDialogID(), *Row);
+		for (FScriptTableData* Row : AllRows)
+		{
+			if ( Row == nullptr )
+				continue;
+		
+			ScriptTableData.Add(Row->ScriptID, *Row);
+		}
 	}
 
 	return true;
 }
 
-// 다이얼로그 테이블 리턴
-const FDialogTableData* UStringManagerSubsystem::GetDialogTableData(int KeyIndex)
+// 대화 테이블 로드
+bool UStringManagerSubsystem::LoadDialogueTable()
 {
-	const auto FindData = DialogTable.Find(KeyIndex);
+	DialogueTableData.Empty();
+	
+	UDataTable* LoadTable = Cast<UDataTable>(
+		StaticLoadObject(UDataTable::StaticClass(),
+			nullptr,
+			TEXT("/Game/DataTables/DT_DialogueTable.DT_DialogueTable"))
+			);
+	if ( LoadTable == nullptr )
+	{
+		FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadDialogueTable() failed!");
+		return false;
+	}
+	
+	TArray<FDialogueTableData*> AllRows;
+	LoadTable->GetAllRows<FDialogueTableData>(TEXT("Dialogue_GetAllRows"), AllRows);
+
+	for (FDialogueTableData* Row : AllRows)
+	{
+		if ( Row == nullptr )
+			continue;
+
+		DialogueTableData.Add(Row->StartScriptID, *Row);
+	}
+
+	return true;
+}
+
+// 대사 테이블 정보 리턴
+const FScriptTableData* UStringManagerSubsystem::GetScriptTableData(int KeyScriptID)
+{
+	const auto FindData = ScriptTableData.Find(KeyScriptID);
+	if ( FindData == nullptr )
+		return nullptr;
+
+	return FindData;
+}
+
+// 대화 테이블 정보 리턴
+const FDialogueTableData* UStringManagerSubsystem::GetDialogueTableData(int KeyScriptID)
+{
+	const auto FindData = DialogueTableData.Find(KeyScriptID);
 	if ( FindData == nullptr )
 		return nullptr;
 

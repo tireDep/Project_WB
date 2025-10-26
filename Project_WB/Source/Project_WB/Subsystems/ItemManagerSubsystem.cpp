@@ -73,8 +73,10 @@ int UItemManagerSubsystem::GetItemID(const int ItemID) const
 {
 	const FItemTableData* ItemTableData = GetItemTableData(ItemID);
 	if ( ItemTableData == nullptr )
+	{
 		return 0;
+	}
 
-	return ItemTableData->GetItemID();
+	return ItemTableData->ItemID;
 }
 

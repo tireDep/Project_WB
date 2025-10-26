@@ -72,14 +72,14 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 	if ( StringManager == nullptr )
 		return;
 
-	const FDialogTableData* DialogTableData = StringManager->GetDialogTableData(DialogKeyIndex);
-	if ( DialogTableData == nullptr )
+	const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogKeyIndex);
+	if ( ScriptTableData == nullptr )
 	{
 		// error
 		return;	
 	}
 
-	FAPI_DebugUtils::ShowInfo( DialogTableData->DialogShowName + L" : " + DialogTableData->DialogString );
+	FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );
 	// <<
 }
 
