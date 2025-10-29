@@ -1,0 +1,6 @@
+﻿RowName,ScriptID,ScriptSprite,ScriptShowName,ScriptString,ScriptImageSprite,GainItemID,TooltipID
+테스트용,1,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',탐정,여기 수상한 물건이 있어,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',,
+코드는 미사용,2,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',탐정,확인해 볼까?,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',,
+대사1,3,,,"(아이템 획득, 수첩에서 확인 가능)",,100,
+대사2,4,,,테스트용 대사,,,1
+대사3,5,,,테스트용 대사2,,,2

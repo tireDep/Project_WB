@@ -1,0 +1,2 @@
+﻿RowName,ScriptID,ScriptSprite,ScriptShowName,ScriptString,ScriptImageSprite,GainItemID,TooltipID
+테스트용,1,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',기본 이름,기본 스트링,/Script/Paper2D.PaperSprite'/Paper2D/DummySprite.DummySprite',,

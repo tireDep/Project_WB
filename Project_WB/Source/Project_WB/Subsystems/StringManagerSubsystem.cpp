@@ -99,6 +99,14 @@ bool UStringManagerSubsystem::LoadDialogueTable()
 			continue;
 
 		DialogueTableData.Add(Row->StartScriptID, *Row);
+
+		// >> 테스트용
+		FDialogCondition DialogCondition;
+		DialogCondition.ScriptID = Row->FirstNextScriptID;
+		DialogCondition.ConditionType = Row->FirstConditionType;
+		DialogCondition.ConditionValue = Row->FirstScirptCondition;
+
+		DialogueData.Add(Row->StartScriptID, DialogCondition);
 	}
 
 	return true;

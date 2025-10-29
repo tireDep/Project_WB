@@ -111,9 +111,39 @@ struct FDialogueTableData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
 	int StartScriptID;
 
+	// 1안
 	// 조건 분기 다이얼로그
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	TArray<FDialogCondition> NextDialogConditions;
+	TArray<FDialogCondition> NextDialogueConditions;
+
+	// 2안
+	// 조건 분기 다이얼로그 개별 설정
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	int FirstNextScriptID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	EConditionType FirstConditionType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	FString FirstScirptCondition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	int SecondNextScriptID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	EConditionType SecondConditionType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	FString SecondScirptCondition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	int ThirdNextScriptID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	EConditionType ThirdConditionType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	FString ThirdScirptCondition;
 
 	FDialogueTableData()
 	{
@@ -123,6 +153,16 @@ struct FDialogueTableData : public FTableRowBase
 	void Init()
 	{
 		StartScriptID = 0;
-		NextDialogConditions.Empty();
+		NextDialogueConditions.Empty();
+		
+		FirstNextScriptID = 0;
+		FirstConditionType = EConditionType::CT_NONE;
+		FirstScirptCondition = FString("");
+		SecondNextScriptID = 0;
+		SecondConditionType = EConditionType::CT_NONE;
+		SecondScirptCondition = FString("");
+		ThirdNextScriptID = 0;
+		ThirdConditionType = EConditionType::CT_NONE;
+		ThirdScirptCondition = FString("");
 	}
 };
