@@ -8,6 +8,7 @@
 #include "Project_WB/Characters/Player/PlayerActor.h"
 #include "Project_WB/CommonComponents/Interaction/MouseInteractionComponent.h"
 #include "Project_WB/Subsystems/StringManagerSubsystem.h"
+#include "Project_WB/Subsystems/UIManagerSubsystem.h"
 
 ABasicItem::ABasicItem()
 {
@@ -78,6 +79,13 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 		// error
 		return;	
 	}
+
+	UUIManagerSubsystem* UIManager = GetGameInstance()->GetSubsystem<UUIManagerSubsystem>();
+	if ( UIManager == nullptr )
+		return;
+
+	UIManager->SetShowUI( EUIType::UT_Dialog, true, true );
+	
 
 	FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );
 	// <<

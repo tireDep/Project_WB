@@ -56,7 +56,7 @@ bool UStringManagerSubsystem::LoadScriptTable()
 		if ( LoadTable == nullptr )
 		{
 			FAPI_DebugUtils::ShowError("UStringManagerSubsystem::LoadScriptTable() failed!");
-			return false;
+			continue;
 		}
 	
 		TArray<FScriptTableData*> AllRows;
