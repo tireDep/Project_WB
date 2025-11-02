@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "../DataTables/CharacterEnumType.h"
+#include "Project_WB/DataTables/ItemTable.h"
 #include "ItemBase.generated.h"
 
 class UPaperSpriteComponent;
@@ -43,6 +44,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
 	FName ItemName;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
+	EItemCategory ItemCategory;
 
 	// 아이템 설명
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")

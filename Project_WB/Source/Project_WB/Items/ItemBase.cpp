@@ -39,6 +39,7 @@ void AItemBase::BeginPlay()
 	
 	ItemID = ItemTableData->ItemID;
 	ItemName = ItemTableData->ItemName;
+	ItemCategory = ItemTableData->ItemCategory;
 	ItemDescription = ItemTableData->ItemDescription;
 	DialogInfo = ItemTableData->DialogInfo;
 	ItemSprite->SetSprite(ItemTableData->ItemSprite);
