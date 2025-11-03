@@ -84,7 +84,7 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 	if ( UIManager == nullptr )
 		return;
 
-	UIManager->SetShowUI( EUIType::UT_Dialog, true, true );
+	// UIManager->SetShowUI( EUIType::UT_Dialog, true, true );
 	
 
 	FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );
