@@ -9,6 +9,7 @@
 #include "Project_WB/CommonComponents/Interaction/MouseInteractionComponent.h"
 #include "Project_WB/Subsystems/StringManagerSubsystem.h"
 #include "Project_WB/Subsystems/UIManagerSubsystem.h"
+#include "Project_WB/UI/DialogueWidget.h"
 
 ABasicItem::ABasicItem()
 {
@@ -80,15 +81,15 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 		return;	
 	}
 
-	UUIManagerSubsystem* UIManager = GetGameInstance()->GetSubsystem<UUIManagerSubsystem>();
+	UUIManagerSubsystem* UIManager = GetUISubsystem();
 	if ( UIManager == nullptr )
 		return;
 
-	// UIManager->SetShowUI( EUIType::UT_Dialog, true, true );
-	
-
-	FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );
-	// <<
+	UDialogueWidget* DailogueWidget = UIManager->GetUI<UDialogueWidget>(EUIType::UT_Dialogue);
+	if ( DailogueWidget != nullptr )
+	{
+		FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );	
+	}
 }
 
 void ABasicItem::OnItemMouseReleased(AActor* Actor)

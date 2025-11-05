@@ -7,7 +7,7 @@ UENUM(BlueprintType)
 enum class EUIType : uint8
 {
 	UT_Invalid = 0,
-	UT_Dialog,
+	UT_Dialogue,
 	UT_Max
 };
 

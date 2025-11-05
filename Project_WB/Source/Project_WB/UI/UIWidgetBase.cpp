@@ -38,10 +38,22 @@ void UUIWidgetBase::SetShow(bool bShow)
 		bHasFocus = false;
 }
 
-// todo : 추후 구현
+// ZOrder 설정
 void UUIWidgetBase::SetUIZOrder(int NewZOrder)
 {
-	FAPI_DebugUtils::ShowWarning("SetUIZOrder is not complete!");
+	// SetZOrder 함수가 없어서 RemoveFromViewport + AddToViewport 사용
+	if (IsInViewport() == false)
+		return;
+
+	// 현재 상태 저장
+	ESlateVisibility CurrentVisibility = GetVisibility();
+
+	// 뷰포트에서 제거 후 새 ZOrder 설정
+	RemoveFromParent();
+	AddToViewport(NewZOrder);
+
+	// 상태 복원
+	SetVisibility( CurrentVisibility );
 }
 
 // 포커스 획득. 블루프린트 추가 구현 가능
@@ -86,6 +98,7 @@ void UUIWidgetBase::OnInitialize_Implementation()
 {
 }
 
+// UI Subsystem 호출
 UUIManagerSubsystem* UUIWidgetBase::GetUISubsystem() const
 {
 	if ( UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld()))

@@ -21,8 +21,7 @@ public:
 
 	// UI 타입 설정
 	void SetUIType(const EUIType SetUIType) { UIType = SetUIType;	}
-
-	// todo : 추후 구현
+	
 	// ZOrder 설정
 	UFUNCTION(BlueprintCallable, Category="UI")
 	void SetUIZOrder(int NewZOrder);

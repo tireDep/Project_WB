@@ -29,6 +29,10 @@ protected:
 	virtual void OnItemMouseClick(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMousePressed,);
 	virtual void OnItemMouseReleased(AActor* Actor) PURE_VIRTUAL(AItemBase::OnItemMouseReleased,);
 
+	// UI Subsystem 접근 헬퍼
+	UFUNCTION(BlueprintCallable, Category = "UI")
+	UUIManagerSubsystem* GetUISubsystem() const;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* RootBoxComponent;
 

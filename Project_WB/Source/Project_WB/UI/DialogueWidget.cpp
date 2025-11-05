@@ -3,7 +3,7 @@
 
 UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	UIType = EUIType::UT_Dialog; 
+	UIType = EUIType::UT_Dialogue; 
 }
 
 // UI 업데이트
@@ -19,7 +19,7 @@ void UDialogueWidget::SetDialogueText(int DialogueIndex)
 	// 대사 이미지
 	// 대사 버튼 표시
 	// - 다음
-	// - 탐정 수첩_아이템 획득
+	// - 탐정 수첩_아이템 획득 
 	// - 탐정 수첩_아이템 제시
 	// - 대화 종료
 }

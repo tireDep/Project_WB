@@ -5,6 +5,7 @@
 #include "Project_WB/Subsystems/ItemManagerSubsystem.h"
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Project_WB/CommonComponents/Interaction/MouseInteractionComponent.h"
 
 AItemBase::AItemBase()
@@ -43,6 +44,15 @@ void AItemBase::BeginPlay()
 	ItemDescription = ItemTableData->ItemDescription;
 	DialogInfo = ItemTableData->DialogInfo;
 	ItemSprite->SetSprite(ItemTableData->ItemSprite);
+}
+
+UUIManagerSubsystem* AItemBase::GetUISubsystem() const
+{
+	if ( UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(GetWorld()))
+	{
+		return GameInstance->GetSubsystem<UUIManagerSubsystem>();
+	}
+	return nullptr;
 }
 
 void AItemBase::Tick(float DeltaTime)
