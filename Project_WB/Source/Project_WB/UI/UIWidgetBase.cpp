@@ -2,6 +2,7 @@
 #include "UIWidgetBase.h"
 
 #include "API_DebugUtils.h"
+#include "VectorVM.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/PanelSlot.h"
 
@@ -9,28 +10,27 @@ UUIWidgetBase::UUIWidgetBase(const FObjectInitializer& ObjectInitializer) : Supe
 {
 	// 초기화
 	UIType = EUIType::UT_Invalid;
-	bIsShow = false;
 	bHasFocus = false;
 }
 
 // UI 표시 제어
 void UUIWidgetBase::SetShow(bool bShow)
 {
-	if (bIsShow == bShow)
+	const bool bCurrentlyVisible = (GetVisibility() == ESlateVisibility::Visible);
+	if (bCurrentlyVisible == bShow)
 		return;
-
-	bIsShow = bShow;
-	if (bIsShow == false )
+	
+	if (bShow == false)
 	{
-		// UI 표시
+		// ui 끄기
 		SetVisibility(ESlateVisibility::Collapsed);
-		OnShow();
+		OnHide();
 	}
 	else
 	{
-		// ui 끄기
+		// UI 표시
 		SetVisibility(ESlateVisibility::Visible);
-		OnHide();
+		OnShow();
 	}
 
 	// 포커스 해제
@@ -72,6 +72,8 @@ void UUIWidgetBase::OnLostFocus_Implementation()
 void UUIWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	RebuildWidget();
 
 	// UI 초기화
 	OnInitialize();

@@ -69,27 +69,17 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 	// 수집한 아이템 정보로 저장
 
 	// 대화창 열기
-	// >>
 	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
 	if ( StringManager == nullptr )
 		return;
 
 	const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogKeyIndex);
 	if ( ScriptTableData == nullptr )
-	{
-		// error
 		return;	
-	}
 
 	UUIManagerSubsystem* UIManager = GetUISubsystem();
 	if ( UIManager == nullptr )
 		return;
-
-	UDialogueWidget* DailogueWidget = UIManager->GetUI<UDialogueWidget>(EUIType::UT_Dialogue);
-	if ( DailogueWidget != nullptr )
-	{
-		FAPI_DebugUtils::ShowInfo( ScriptTableData->ScriptShowName + L" : " + ScriptTableData->ScriptString );	
-	}
 }
 
 void ABasicItem::OnItemMouseReleased(AActor* Actor)

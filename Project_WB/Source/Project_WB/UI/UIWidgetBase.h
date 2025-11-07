@@ -26,10 +26,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="UI")
 	void SetUIZOrder(int NewZOrder);
 
-	// UI 표시 상태 리턴
-	UFUNCTION(BlueprintPure, Category="UI")
-	bool GetShowUI() const { return bIsShow;		}
-
 	// UI 타입 리턴
 	UFUNCTION(BlueprintPure, Category="UI")
 	EUIType GetUIType() const { return UIType;		}
@@ -76,10 +72,6 @@ protected:
 	// UI 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	EUIType UIType;
-
-	// 표시 여부
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI", meta = (EditCondition = false, EditConditionHides))
-	bool bIsShow;
 
 	// 포커스 상태
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")

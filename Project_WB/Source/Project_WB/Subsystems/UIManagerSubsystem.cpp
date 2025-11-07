@@ -3,8 +3,33 @@
 
 #include "API_DebugUtils.h"
 #include "Kismet/GameplayStatics.h"
+#include "Project_WB/Characters/Player/PlayerActor.h"
 #include "Project_WB/UI/DialogueWidget.h"
 #include "Project_WB/UI/UIWidgetBase.h"
+
+UUIWidgetBase* UUIManagerSubsystem::GetCheckUICreated(EUIType UIType)
+{
+	UUIWidgetBase* Widget = GetUIWidget(UIType);
+	if (Widget != nullptr)
+		return Widget;
+
+	return nullptr;
+}
+
+void UUIManagerSubsystem::AddUIInfo(UUIWidgetBase* AddWidget)
+{
+	if (AddWidget == nullptr)
+		return;
+
+	AddWidget->AddToViewport();
+	
+	UIWidgetMap.Add(AddWidget->GetUIType(), AddWidget);
+}
+
+void UUIManagerSubsystem::TESTTEST()
+{
+	CreateUI( EUIType::UT_Dialogue );
+}
 
 // 초기화
 void UUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -57,19 +82,7 @@ UUIWidgetBase* UUIManagerSubsystem::GetUIWidget(EUIType UIType)
 		return *FindWidget;
 	}
 
-	// 없으면 새로 생성
-	UUIWidgetBase* NewWidget = CreateUI(UIType);
-	if (NewWidget != nullptr)
-	{
-		UIWidgetMap.Add(UIType, NewWidget);
-	}
-	else
-	{
-		FString TypeStringForError = *UEnum::GetValueAsString(UIType);
-		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::GetUIWidget create widget fail " + TypeStringForError );
-	}
-
-	return NewWidget;
+	return nullptr;
 }
 
 void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus)
@@ -226,15 +239,23 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 	}
 
 	// 월드 컨텍스트 가져오기
-	UWorld* World = GetWorld();
-	if (World ==nullptr)
-	{
-		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::CreateUI world is nullptr " );
+	AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
+	if (FindActor == nullptr)
 		return nullptr;
-	}
+
+	APlayerActor* PlayerActor = Cast<APlayerActor>(FindActor);
+	if (PlayerActor == nullptr)
+		return nullptr;
+
+	// FindActor->GetOwner()->getcon
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if ( PC == nullptr )
+		return nullptr;
+
+	
 
 	// 위젯 생성
-	UUIWidgetBase* NewWidget = CreateWidget<UUIWidgetBase>(World, *WidgetClass);
+	UUIWidgetBase* NewWidget = CreateWidget<UUIWidgetBase>(PC, *WidgetClass);
 	if (NewWidget == nullptr)
 	{
 		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::CreateUI fail " + TypeStringForError );
@@ -246,13 +267,13 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 
 	// 뷰포트 추가, 기본적으로 숨김상태
 	NewWidget->AddToViewport();
-	NewWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	// ZOrder 설정
-	if (FUILayerInfo* LayerInfo = UILayerInfoMap.Find(UIType))
-	{
-		NewWidget->SetUIZOrder(LayerInfo->ZOrder);
-	}
+	NewWidget->RemoveFromParent();
+	NewWidget->AddToViewport();
+
+	NewWidget->GetVisibility();
+	NewWidget->GetDesiredSize();
+	NewWidget->IsInViewport();
 
 	return NewWidget;
 }

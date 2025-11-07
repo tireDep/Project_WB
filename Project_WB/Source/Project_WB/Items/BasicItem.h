@@ -17,16 +17,16 @@ protected:
 	virtual void BeginPlay() override;
 
 	// 마우스 입력 처리
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void OnItemMouseOver(AActor* Actor) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void OnItemMouseExit(AActor* Actor) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void OnItemMouseClick(AActor* Actor) override;
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	virtual void OnItemMouseReleased(AActor* Actor) override;
 	
 

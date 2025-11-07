@@ -45,6 +45,15 @@ class PROJECT_WB_API UUIManagerSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category="UI")
+	UUIWidgetBase* GetCheckUICreated(EUIType UIType);
+
+	UFUNCTION(BlueprintCallable, Category="UI")
+	void AddUIInfo(UUIWidgetBase* AddWidget);
+
+	UFUNCTION(BlueprintCallable, Category="UI")
+	void TESTTEST();
+	
 	// Subsystem 초기화
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
