@@ -61,7 +61,7 @@ struct FScriptTableData : public FTableRowBase
 
 	// 대화 내용
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	FString ScriptString;
+	FString ScriptDesc;
 
 	// 이미지 스프라이트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
@@ -93,7 +93,7 @@ struct FScriptTableData : public FTableRowBase
 		ScriptID = 0;
 		ScriptSprite = nullptr;
 		ScriptShowName = FString("Default");
-		ScriptString = FString("Default");
+		ScriptDesc = FString("Default");
 		ScriptImageSprite = nullptr;
 		GainItemID = 0;
 		TooltipID = 0;

@@ -7,30 +7,6 @@
 #include "Project_WB/UI/DialogueWidget.h"
 #include "Project_WB/UI/UIWidgetBase.h"
 
-UUIWidgetBase* UUIManagerSubsystem::GetCheckUICreated(EUIType UIType)
-{
-	UUIWidgetBase* Widget = GetUIWidget(UIType);
-	if (Widget != nullptr)
-		return Widget;
-
-	return nullptr;
-}
-
-void UUIManagerSubsystem::AddUIInfo(UUIWidgetBase* AddWidget)
-{
-	if (AddWidget == nullptr)
-		return;
-
-	AddWidget->AddToViewport();
-	
-	UIWidgetMap.Add(AddWidget->GetUIType(), AddWidget);
-}
-
-void UUIManagerSubsystem::TESTTEST()
-{
-	CreateUI( EUIType::UT_Dialogue );
-}
-
 // 초기화
 void UUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -66,6 +42,54 @@ void UUIManagerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+bool UUIManagerSubsystem::CheckIsUITypeValid(EUIType UIType)
+{
+	FString TypeStringForError = *UEnum::GetValueAsString(UIType);
+	
+	// UI 위젯 클래스가 설정되어 있는지 확인
+	TSubclassOf<UUIWidgetBase>* WidgetClass = UIWidgetClasses.Find(UIType);
+	if (!WidgetClass || !(*WidgetClass))
+	{
+		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::CreateUI class not exist " + TypeStringForError );
+		return false;
+	}
+
+	return true;
+}
+
+UUIWidgetBase* UUIManagerSubsystem::GetCheckUICreated(EUIType UIType)
+{
+	UUIWidgetBase* ReturnWidget = nullptr;
+	if (CheckIsUITypeValid(UIType) == true)
+	{
+		UUIWidgetBase* Widget = GetUIWidget(UIType);
+		if (Widget != nullptr)
+			ReturnWidget = Widget;
+	}
+	
+	return ReturnWidget;
+}
+
+void UUIManagerSubsystem::AddUIInfo(UUIWidgetBase* AddWidget, bool bVisible)
+{
+	if (AddWidget == nullptr)
+		return;
+
+	// UI 정보 저장
+	UIWidgetMap.Add(AddWidget->GetUIType(), AddWidget);
+	
+	AddWidget->AddToViewport();
+
+	if (bVisible==true)
+	{
+		SetShowUI( AddWidget->GetUIType(), true );
+	}
+	else
+	{
+		SetShowUI( AddWidget->GetUIType(), false );
+	}
+}
+
 // UI 위젯 가져오기
 UUIWidgetBase* UUIManagerSubsystem::GetUIWidget(EUIType UIType)
 {
@@ -87,7 +111,7 @@ UUIWidgetBase* UUIManagerSubsystem::GetUIWidget(EUIType UIType)
 
 void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus)
 {
-	// UI 가져오기. 없으면 자동 생성
+	// UI 가져오기
 	UUIWidgetBase* ReturnWidget = GetUIWidget(UIType);
 	if (ReturnWidget == nullptr)
 	{
@@ -97,7 +121,7 @@ void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus
 	}
 
 	// UI 표시 제어
-	ReturnWidget->SetShow(bShow);
+	ReturnWidget->SetShowUI(bShow);
 
 	if (bShow == true)
 	{
@@ -138,8 +162,9 @@ void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus
 		}
 	}
 
+	// todo : 테스트를 위해 주석처리
 	// 입력 모드 업데이트(UI 상태에 따라 자동 조정)
-	UpdateInputMode();
+	// UpdateInputMode();
 }
 
 bool UUIManagerSubsystem::IsUIVisible(EUIType UIType) const
@@ -251,8 +276,6 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if ( PC == nullptr )
 		return nullptr;
-
-	
 
 	// 위젯 생성
 	UUIWidgetBase* NewWidget = CreateWidget<UUIWidgetBase>(PC, *WidgetClass);

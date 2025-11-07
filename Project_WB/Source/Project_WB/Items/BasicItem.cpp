@@ -16,6 +16,16 @@ ABasicItem::ABasicItem()
 	
 }
 
+int ABasicItem::GetDialogueIndex(ECharacterID CharacterID)
+{
+	int ResultDialogueIndex = 0;
+	auto DialogKey = DialogInfo.Find( CharacterID );
+	if (DialogKey != nullptr)
+		ResultDialogueIndex = *DialogKey;
+		
+	return ResultDialogueIndex;
+}
+
 void ABasicItem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,48 +48,39 @@ void ABasicItem::OnItemMouseExit(AActor* Actor)
 
 void ABasicItem::OnItemMouseClick(AActor* Actor)
 {
-	AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
-	if (FindActor == nullptr)
-		return;
-
-	APlayerActor* PlayerActor = Cast<APlayerActor>(FindActor);
-	if (PlayerActor == nullptr)
-		return;
-
-	int DialogKeyIndex = 0;
-	// 대화중 체크 필요
-	{
-		
-	}
-	// 대화중이 아닐 경우
-	{
-		// 이미 수집한 아이템인지 체크 필요
-
-		ECharacterID CharacterID = PlayerActor->GetCharacterID();
-		auto DialogKey = DialogInfo.Find( CharacterID );
-		if (DialogKey == nullptr)
-		{
-			// error
-			return;	
-		}
-
-		DialogKeyIndex = *DialogKey;
-	}
-
-	// 수집한 아이템 정보로 저장
-
-	// 대화창 열기
-	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
-	if ( StringManager == nullptr )
-		return;
-
-	const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogKeyIndex);
-	if ( ScriptTableData == nullptr )
-		return;	
-
-	UUIManagerSubsystem* UIManager = GetUISubsystem();
-	if ( UIManager == nullptr )
-		return;
+	// todo : 추후 재 확인. 블루프린트에서 생성하는 것으로 변경해둠.
+	// AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
+	// if (FindActor == nullptr)
+	// 	return;
+	//
+	// APlayerActor* PlayerActor = Cast<APlayerActor>(FindActor);
+	// if (PlayerActor == nullptr)
+	// 	return;
+	//
+	// int DialogKeyIndex = 0;
+	// // 이미 수집한 아이템인지 체크 필요
+	//
+	// ECharacterID CharacterID = PlayerActor->GetCharacterID();
+	// auto DialogKey = DialogInfo.Find( CharacterID );
+	// if (DialogKey == nullptr)
+	// {
+	// 	return;	
+	// }
+	//
+	// DialogKeyIndex = *DialogKey;
+	//
+	// // 대화창 열기
+	// UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
+	// if ( StringManager == nullptr )
+	// 	return;
+	//
+	// const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogKeyIndex);
+	// if ( ScriptTableData == nullptr )
+	// 	return;	
+	//
+	// UUIManagerSubsystem* UIManager = GetUISubsystem();
+	// if ( UIManager == nullptr )
+	// 	return;
 }
 
 void ABasicItem::OnItemMouseReleased(AActor* Actor)

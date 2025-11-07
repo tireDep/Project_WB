@@ -13,6 +13,10 @@ class PROJECT_WB_API ABasicItem : public AItemBase
 public:
 	ABasicItem();
 
+	// 캐릭터별 대화 정보 가져오기
+	UFUNCTION(BlueprintCallable)
+	int GetDialogueIndex(ECharacterID CharacterID);
+
 protected:
 	virtual void BeginPlay() override;
 

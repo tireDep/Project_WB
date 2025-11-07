@@ -17,7 +17,7 @@ public:
 
 	// UI 표시 제어
 	UFUNCTION(BlueprintCallable, Category="UI")
-	virtual void SetShow(bool bShow);
+	virtual void SetShowUI(bool bShow);
 
 	// UI 타입 설정
 	void SetUIType(const EUIType SetUIType) { UIType = SetUIType;	}
@@ -43,6 +43,10 @@ public:
 	UFUNCTION(BlueprintPure, Category="UI")
 	bool OnLostFocus() { return true;	}		// BlueprintPure specifier is not allowed for functions with no return value and no output parameters.
 	virtual void OnLostFocus_Implementation();
+
+	// UI 표시 상태
+	UFUNCTION(BlueprintCallable, Category="UI")
+	bool IsUIVisible();
 
 protected:
 	// NativeConstruct 오버라이드

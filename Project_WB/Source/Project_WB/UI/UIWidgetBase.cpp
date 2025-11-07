@@ -14,7 +14,7 @@ UUIWidgetBase::UUIWidgetBase(const FObjectInitializer& ObjectInitializer) : Supe
 }
 
 // UI 표시 제어
-void UUIWidgetBase::SetShow(bool bShow)
+void UUIWidgetBase::SetShowUI(bool bShow)
 {
 	const bool bCurrentlyVisible = (GetVisibility() == ESlateVisibility::Visible);
 	if (bCurrentlyVisible == bShow)
@@ -66,6 +66,11 @@ void UUIWidgetBase::OnGaindFocus_Implementation()
 void UUIWidgetBase::OnLostFocus_Implementation()
 {
 	bHasFocus = false;
+}
+
+bool UUIWidgetBase::IsUIVisible()
+{
+	return GetVisibility() == ESlateVisibility::Visible || GetVisibility() == ESlateVisibility::HitTestInvisible;
 }
 
 // AddToViewprot시 호출. Viewport에 Add될 때 마다 호출됨

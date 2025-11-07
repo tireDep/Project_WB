@@ -45,20 +45,23 @@ class PROJECT_WB_API UUIManagerSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category="UI")
-	UUIWidgetBase* GetCheckUICreated(EUIType UIType);
-
-	UFUNCTION(BlueprintCallable, Category="UI")
-	void AddUIInfo(UUIWidgetBase* AddWidget);
-
-	UFUNCTION(BlueprintCallable, Category="UI")
-	void TESTTEST();
-	
 	// Subsystem 초기화
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	// UI 위젯 가져오기, 없으면 생성
+	// UI 타입 체크
+	UFUNCTION()
+	bool CheckIsUITypeValid(EUIType UIType);
+
+	// UI 생성 여부 체크
+	UFUNCTION(BlueprintCallable, Category="UI")
+	UUIWidgetBase* GetCheckUICreated(EUIType UIType);
+
+	// UI 추가
+	UFUNCTION(BlueprintCallable, Category="UI")
+	void AddUIInfo(UUIWidgetBase* AddWidget, bool bVisible);
+
+	// UI 위젯 가져오기
 	// UIType : 가져올 UI 타입
 	UFUNCTION(BlueprintCallable, Category="UI")
 	UUIWidgetBase* GetUIWidget(EUIType UIType);
@@ -69,7 +72,7 @@ public:
 	// return : 타입 캐스팅된 UI 위젯 포인터, 실패시 nullptr
 	// e.g. UDialogueWidget* DialogueWidget = UIManagerSubsystem->GetUIWidget<UDialogueWidget>(EUIType::Dialogue);
 	template<typename T>
-	T* GetUI(EUIType UIType)
+	T* GetUIWidget(EUIType UIType)
 	{
 		static_assert(TIsDerivedFrom<T,UUIWidgetBase>::Value, "T must be derived from UIWidgetBase");
 		return Cast<T>(GetUIWidget(UIType));
@@ -108,6 +111,7 @@ public:
 	void BringUIToFront(EUIType UIType);
 
 protected:
+	// todo : 추후 다시 확인해 보기. 생성자 문제인거로 일단 확인 완료
 	// UI 생성
 	UUIWidgetBase* CreateUI(EUIType UIType);
 
