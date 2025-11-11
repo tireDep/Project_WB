@@ -35,7 +35,7 @@ void ABasicItem::SetDialogueTextInfo(ECharacterID CharacterID, UUserWidget* Widg
 
 	UDialogueWidget* DialogueWidget = Cast<UDialogueWidget>(Widget);
 	if (DialogueWidget != nullptr)
-		DialogueWidget->SetDialogueText(DialogueIndex);
+		DialogueWidget->UpdateDialogueText(DialogueIndex);
 }
 
 void ABasicItem::BeginPlay()

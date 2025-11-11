@@ -2,7 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Project_WB/DataTables/DialogTable.h"
+#include "Project_WB/DataTables/DialogueTable.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "StringManagerSubsystem.generated.h"
 

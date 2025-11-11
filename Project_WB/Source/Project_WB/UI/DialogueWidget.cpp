@@ -1,49 +1,145 @@
 ﻿
 #include "DialogueWidget.h"
 
+#include "PaperSprite.h" 
+#include "Components/Button.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Project_WB/DataTables/DialogueTable.h"
 #include "Project_WB/Subsystems/StringManagerSubsystem.h"
 
 UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	UIType = EUIType::UT_Dialogue; 
+	UIType = EUIType::UT_Dialogue;
 }
 
 // UI 업데이트
-void UDialogueWidget::SetDialogueText(int DialogueIndex)
+void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 {
 	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
 	if ( StringManager == nullptr )
 		return;
+	
+	const FDialogueTableData* CurDialogueTableData = StringManager->GetDialogueTableData(DialogueIndex);
+	if (CurDialogueTableData == nullptr)
+	{
+		// error
+		return;
+	}
 
-	const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogueIndex);
-	if ( ScriptTableData == nullptr )
+	CurDialogueID = DialogueIndex;
+	const FScriptTableData* CurScriptTableData = StringManager->GetScriptTableData(DialogueIndex);
+	if ( CurScriptTableData == nullptr )
 	{
 		//error
 		return;
 	}
-
+	
+	CurScriptID = CurScriptTableData->ScriptID;
 	if ( ScriptName == nullptr
-		|| ScriptDesc == nullptr )
-		return;
+		|| ScriptDesc == nullptr
+		|| CharacterImage == nullptr
+		|| ScriptImage == nullptr
+		|| NextButton == nullptr
+		|| SuggestButton == nullptr
+		|| ExitButton == nullptr
+		|| ItemNoteButton == nullptr
+		)
+	{
+		return;	
+	}
 	
 	// 초기화
+	ScriptImage->SetVisibility(ESlateVisibility::Hidden);
+	ItemNoteButton->SetVisibility(ESlateVisibility::Hidden);
+	SuggestButton->SetVisibility(ESlateVisibility::Hidden);
+	ExitButton->SetVisibility(ESlateVisibility::Hidden);
 
 	// 업데이트
-	// * 캐릭터 대사 분기문 적용 필요
 	// 캐릭터 이미지
+	if (CurScriptTableData->CharacterSprite != nullptr)
+		CharacterImage->SetBrushFromAtlasInterface(CurScriptTableData->CharacterSprite);
+	
 	// 캐릭터 이름
-	ScriptName->SetText( FText::FromString(ScriptTableData->ScriptShowName) );
+	ScriptName->SetText( FText::FromString(CurScriptTableData->ScriptShowName) );
 	
 	// 캐릭터 대사
-	ScriptDesc->SetText( FText::FromString(ScriptTableData->ScriptDesc) );
+	ScriptDesc->SetText( FText::FromString(CurScriptTableData->ScriptDesc) );
 	
 	// 대사 이미지
-	// 대사 버튼 표시
-	// - 다음
-	// - 탐정 수첩_아이템 획득 
-	// - 탐정 수첩_아이템 제시
-	// - 대화 종료
+	if (CurScriptTableData->ScriptImageSprite != nullptr)
+	{
+		ScriptImage->SetBrushFromAtlasInterface(CurScriptTableData->ScriptImageSprite);
+		ScriptImage->SetVisibility(ESlateVisibility::Visible);
+	}
+	
+	// 탐정 수첩 확인 버튼
+	if (CurScriptTableData->GainItemID != 0)
+	{
+		// todo : 아이템 획득 처리
+		ItemNoteButton->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	// todo : 이거 두개 체크할 방법이 필요
+	// 아이템 제시 버튼
+	// 대화 종료 버튼
+}
+
+// 다음 대화문 정보가 있는지 체크 후 업데이트
+void UDialogueWidget::OnNextButtonClicked()
+{
+	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
+	if ( StringManager == nullptr )
+		return;
+	
+	const FDialogueTableData* CurDialogueTableData = StringManager->GetDialogueTableData(CurDialogueID);
+	if (CurDialogueTableData == nullptr)
+	{
+		// error
+		return;
+	}
+
+	// 다음 대사가 없을 경우, UI 끄기
+	if (CurDialogueTableData->NextDialogueConditions.IsEmpty() == true)
+	{
+		SetShowUI(false);
+		return;
+	}
+	
+	// 캐릭터 대사 분기 체크
+	int NextDialogueID = 0;
+	for (int Index = 0; Index < CurDialogueTableData->NextDialogueConditions.Num(); Index++)
+	{
+		FDialogCondition DialogCondition = CurDialogueTableData->NextDialogueConditions[Index];
+		switch (DialogCondition.ConditionType)
+		{
+		case EConditionType::CT_HAS_ITEM:
+			{
+				// todo : 조건체크
+				NextDialogueID = DialogCondition.DialogueID;
+			}
+			break;
+		case EConditionType::CT_PROGRESS:
+			{
+				// todo : 조건체크
+				NextDialogueID = DialogCondition.DialogueID;
+			}
+			break;
+		case EConditionType::CT_NONE:
+			{
+				// todo : 조건체크
+				NextDialogueID = DialogCondition.DialogueID;
+			}
+			break;
+		default:
+			{
+				// error		
+			}
+			break;
+		}
+	}
+
+	UpdateDialogueText(NextDialogueID);
 }
 
 // UI 열때 , 블루프린트 추가 구현 가능
@@ -62,6 +158,10 @@ void UDialogueWidget::OnHide_Implementation()
 void UDialogueWidget::OnInitialize_Implementation()
 {
 	Super::OnInitialize_Implementation();
+
+	// 다음 버튼 함수 지정
+	if (NextButton != nullptr)
+		NextButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnNextButtonClicked);
 }
 
 // 포커스 획득, 블루프린트 추가 구현 가능
