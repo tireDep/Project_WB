@@ -51,6 +51,14 @@ struct FScriptTableData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
 	int ScriptID;
 
+	// 대사 띄울 조건 아이템 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	int ConditionItemID;
+
+	// 대사 띄울 조건 캐릭터 TYPE
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	ECharacterType CharacterType;
+
 	// 대화 표시 스프라이트
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
 	UPaperSprite* CharacterSprite;
@@ -79,9 +87,9 @@ struct FScriptTableData : public FTableRowBase
 	// TODO
 	// 추가효과가 붙는다면 이쪽에 추가
 
-	// // 조건 분기 다이얼로그
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	// TArray<FDialogCondition> DialogConditions;
+	// 조건 분기 다이얼로그
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	TArray<FDialogCondition> DialogConditions;
 
 	FScriptTableData()
 	{

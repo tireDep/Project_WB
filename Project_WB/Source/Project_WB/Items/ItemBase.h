@@ -36,29 +36,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* RootBoxComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UPaperSpriteComponent* ItemSprite;
+	// 아이템 정보
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemInfo")
+	FItemTableData ItemData;
+
+	// 아이템 필드 이미지
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemInfo")
+	UPaperSpriteComponent* ItemFieldSprite;
 
 	// 상호작용 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UMouseInteractionComponent* MouseInteractionComponent;
-	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	int ItemID;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	FName ItemName;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	EItemCategory ItemCategory;
-
-	// 아이템 설명
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	FName ItemDescription;
-
-	// npc키 값, 상호작용 대사 키 값
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="Item Info")
-	TMap<ECharacterID, int> DialogInfo;
 
 public:
 	virtual void Tick(float DeltaTime) override;

@@ -32,18 +32,10 @@ struct FItemTableData : public FTableRowBase
 	// 설명
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Table")
 	FName ItemDescription;
-
-	// character's ID, dialog ID
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Table")
-	TMap<ECharacterID, int> DialogInfo;
-
+	
 	// 이미지
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Graphic")
 	UPaperSprite* ItemSprite;
-
-	// 아이콘
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Graphic")
-	UTexture2D* ItemIcon;
 
 	FItemTableData()
 	{
@@ -56,7 +48,6 @@ struct FItemTableData : public FTableRowBase
 		ItemName = FName("DefaultName");
 		ItemDescription = FName("DefaultDesc");
 		ItemSprite = nullptr;
-		ItemIcon = nullptr;
 	}
 };
 
