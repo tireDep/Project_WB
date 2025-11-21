@@ -14,13 +14,12 @@ AItemBase::AItemBase()
 
 	RootBoxComponent = CreateDefaultSubobject<UBoxComponent>(FName("RootBoxComponent"));
 	RootComponent = RootBoxComponent;
-
-	// todo : 필드 배치 이미지 수정 필요
-	ItemFieldSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("CharacterSprite"));
-	ItemFieldSprite->SetupAttachment(RootBoxComponent);
+	
+	ItemSprite = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("CharacterSprite"));
+	ItemSprite->SetupAttachment(RootBoxComponent);
 
 	MouseInteractionComponent = CreateDefaultSubobject<UMouseInteractionComponent>(TEXT("MouseInteractionComponent"));
-	MouseInteractionComponent->SetTargetSprite(ItemFieldSprite);
+	MouseInteractionComponent->SetTargetSprite(ItemSprite);
 }
 
 void AItemBase::BeginPlay()
@@ -32,14 +31,19 @@ void AItemBase::BeginPlay()
 		return;
 
 	// 테이블 데이터 세팅
-	const FItemTableData* ItemTableData = ItemManger->GetItemTableData( ItemData.ItemID ); 
+	const FItemTableData* ItemTableData = ItemManger->GetItemTableData( ItemID ); 
 	if ( ItemTableData == nullptr )
 	{
-		FAPI_DebugUtils::ShowError("Item LoadFail! ItemName : " + ItemData.ItemName.ToString() + "ItmeID : " + FString::FromInt(ItemData.ItemID) );
+		FAPI_DebugUtils::ShowError("Item LoadFail! ItemName : " + ItemName.ToString() + "ItmeID : " + FString::FromInt(ItemID) );
 		return;
 	}
-
-	ItemData = *ItemTableData;
+	
+	ItemID = ItemTableData->ItemID;
+	ItemName = ItemTableData->ItemName;
+	ItemCategory = ItemTableData->ItemCategory;
+	ItemDescription = ItemTableData->ItemDescription;
+	DialogInfo = ItemTableData->DialogInfo;
+	ItemSprite->SetSprite(ItemTableData->ItemSprite);
 }
 
 UUIManagerSubsystem* AItemBase::GetUISubsystem() const

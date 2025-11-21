@@ -18,28 +18,24 @@ ABasicItem::ABasicItem()
 
 int ABasicItem::GetDialogueIndex(ECharacterID CharacterID)
 {
-	return 0;
-	
-	// todo : 
-	// int ResultDialogueIndex = 0;
-	// auto DialogKey = DialogInfo.Find( CharacterID );
-	// if (DialogKey != nullptr)
-	// 	ResultDialogueIndex = *DialogKey;
-	// 	
-	// return ResultDialogueIndex;
+	int ResultDialogueIndex = 0;
+	auto DialogKey = DialogInfo.Find( CharacterID );
+	if (DialogKey != nullptr)
+		ResultDialogueIndex = *DialogKey;
+		
+	return ResultDialogueIndex;
 }
 
 void ABasicItem::SetDialogueTextInfo(ECharacterID CharacterID, UUserWidget* Widget)
 {
-	// todo : 
-	// int DialogueIndex = 0;
-	// auto DialogKey = DialogInfo.Find( CharacterID );
-	// if (DialogKey != nullptr)
-	// 	DialogueIndex = *DialogKey;
-	// 
-	// UDialogueWidget* DialogueWidget = Cast<UDialogueWidget>(Widget);
-	// if (DialogueWidget != nullptr)
-	// 	DialogueWidget->UpdateDialogueText(DialogueIndex);
+	int DialogueIndex = 0;
+	auto DialogKey = DialogInfo.Find( CharacterID );
+	if (DialogKey != nullptr)
+		DialogueIndex = *DialogKey;
+
+	UDialogueWidget* DialogueWidget = Cast<UDialogueWidget>(Widget);
+	if (DialogueWidget != nullptr)
+		DialogueWidget->UpdateDialogueText(DialogueIndex);
 }
 
 void ABasicItem::BeginPlay()
