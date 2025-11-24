@@ -32,9 +32,5 @@ private:
 	TMap<int, FScriptTableData> ScriptTableData;		// 대사 테이블 데이터, < ScriptID, FScriptTableData >
 
 	UPROPERTY()
-	TMap<int, FDialogueTableData> DialogueTableData;	// 대화 테이블 데이터, < ScriptID, FDialogueTableData >
-
-	// 테스트용
-	UPROPERTY()
-	TMap<int, FDialogCondition> DialogueData;
+	TMap<int, FDialogueTableData> DialogueTableData;	// 대화 테이블 데이터, < DialogueID, FDialogueTableData >
 };

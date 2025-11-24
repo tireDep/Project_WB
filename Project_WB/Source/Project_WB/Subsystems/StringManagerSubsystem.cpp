@@ -97,15 +97,8 @@ bool UStringManagerSubsystem::LoadDialogueTable()
 	{
 		if ( Row == nullptr )
 			continue;
-
-		DialogueTableData.Add(Row->ScriptID, *Row);
-
-		// // >> 테스트용
-		// FDialogCondition DialogCondition;
-		// DialogCondition.DialogueID = Row->FirstNextScriptID;
-		// DialogCondition.ConditionType = Row->FirstConditionType;
-		// DialogCondition.ConditionValue = Row->FirstScirptCondition;
-		// DialogueData.Add(Row->ScriptID, DialogCondition);
+		
+		DialogueTableData.Add(Row->DialogueID, *Row);
 	}
 
 	return true;

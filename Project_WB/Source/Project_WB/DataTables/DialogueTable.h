@@ -1,47 +1,24 @@
 ﻿#pragma once
 #include "CharacterEnumType.h"
+#include "IPropertyTable.h"
 #include "Engine/DataTable.h"
 #include "PaperSpriteComponent.h"
 #include "DialogueTable.generated.h"
+
+// TODO : 공용 사용으로 옮기기?
+constexpr int VALUE_NUMBER_ZERO = 0;
 
 // 조건 타입 열거형
 UENUM(BlueprintType)
 enum class EConditionType : uint8
 {
+	CT_INVALID,
 	CT_HAS_ITEM,	// 아이템 보유
 	CT_PROGRESS,	// 진행도
-	CT_NONE,		// 조건 없음
+	CT_MAX,
 };
 
-// 다음 대사 세팅용 조건 구조체
-USTRUCT(BlueprintType)
-struct FDialogCondition
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
-	EConditionType	ConditionType;		// 대사 조건 타입
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
-	FString			ConditionValue;		// 대사 조건 값
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FDialogCondition")
-	int             DialogueID;			// 다이얼로그 ID
-
-	FDialogCondition()
-	{
-		Init();
-	}
-
-	void Init()
-	{
-		ConditionType = EConditionType::CT_NONE;
-		ConditionValue = "";
-		DialogueID = 0;
-	}
-};
-
-// 대사 설정 테이블 구조체
+// 대사 테이블 구조체
 USTRUCT(BlueprintType)
 struct FScriptTableData : public FTableRowBase
 {
@@ -79,10 +56,6 @@ struct FScriptTableData : public FTableRowBase
 	// TODO
 	// 추가효과가 붙는다면 이쪽에 추가
 
-	// // 조건 분기 다이얼로그
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	// TArray<FDialogCondition> DialogConditions;
-
 	FScriptTableData()
 	{
 		Init();
@@ -90,60 +63,45 @@ struct FScriptTableData : public FTableRowBase
 	
 	void Init()
 	{
-		ScriptID = 0;
+		ScriptID = VALUE_NUMBER_ZERO;
 		CharacterSprite = nullptr;
 		ScriptShowName = FString("Default");
 		ScriptDesc = FString("Default");
 		ScriptImageSprite = nullptr;
-		GainItemID = 0;
-		TooltipID = 0;
-		// DialogConditions.Empty();
+		GainItemID = VALUE_NUMBER_ZERO;
+		TooltipID = VALUE_NUMBER_ZERO;
 	}
 };
 
-// 대화문 설정 구조체
+// 대화 테이블 구조체
 USTRUCT(BlueprintType)
 struct FDialogueTableData : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	// 대사 ID
+	// 대화 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	int ScriptID;
-
-	// 1안
-	// 조건 분기 다이얼로그
+	int DialogueID;
+	
+	// 표시할 대사 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	TArray<FDialogCondition> NextDialogueConditions;
+	int ShowScriptID;
+	
+	// 기본 다음 진행 대화 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
+	int DefaultNextDialogueID;
+	
+	// 대사 분기 타입
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
+	EConditionType ConditionType;
 
-	// // 2안
-	// // 조건 분기 다이얼로그 개별 설정
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// int FirstNextScriptID;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// EConditionType FirstConditionType;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// FString FirstScirptCondition;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// int SecondNextScriptID;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// EConditionType SecondConditionType;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// FString SecondScirptCondition;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// int ThirdNextScriptID;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// EConditionType ThirdConditionType;
-	//
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
-	// FString ThirdScirptCondition;
+	// 대사 분기 값
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
+	FString ConditionValue;
+
+	// 대사 분기 다음 진행 대화 ID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
+	int ConditionNextDialogueID;
 
 	FDialogueTableData()
 	{
@@ -152,17 +110,11 @@ struct FDialogueTableData : public FTableRowBase
 	
 	void Init()
 	{
-		ScriptID = 0;
-		NextDialogueConditions.Empty();
-		
-		// FirstNextScriptID = 0;
-		// FirstConditionType = EConditionType::CT_NONE;
-		// FirstScirptCondition = FString("");
-		// SecondNextScriptID = 0;
-		// SecondConditionType = EConditionType::CT_NONE;
-		// SecondScirptCondition = FString("");
-		// ThirdNextScriptID = 0;
-		// ThirdConditionType = EConditionType::CT_NONE;
-		// ThirdScirptCondition = FString("");
+		DialogueID						= VALUE_NUMBER_ZERO;
+		ShowScriptID					= VALUE_NUMBER_ZERO;
+		DefaultNextDialogueID			= VALUE_NUMBER_ZERO;
+		ConditionType					= EConditionType::CT_INVALID;
+		ConditionValue					= FString("");
+		ConditionNextDialogueID			= VALUE_NUMBER_ZERO;
 	}
 };

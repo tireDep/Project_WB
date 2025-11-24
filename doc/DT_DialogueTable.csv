@@ -1,4 +1,6 @@
-﻿RowName,ScriptID,NextDialogueConditions
-테스트용,1,"({""ConditionType"":""CT_NONE"",""ConditionValue"":"""",""DialogueID"":2})"
-테스트용2,2,"({""ConditionType"":""CT_HAS_ITEM"",""ConditionValue"":"""",""DialogueID"":2}, {""ConditionType"":""CT_NONE"",""ConditionValue"":""100"",""DialogueID"":2})"
-테스트용3,3,
+﻿RowName,DialogueID,ShowScriptID,DefaultNextDialogueID,ConditionType,ConditionValue,ConditionNextDialogueID
+5,1,1,2,CT_INVALID,,
+1,2,2,3,CT_INVALID,,
+2,3,3,,CT_INVALID,,
+3,4,4,3,CT_INVALID,,5
+4,5,5,,CT_INVALID,,

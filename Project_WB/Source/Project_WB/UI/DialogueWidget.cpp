@@ -1,6 +1,7 @@
 ﻿
 #include "DialogueWidget.h"
 
+#include "API_DebugUtils.h"
 #include "PaperSprite.h" 
 #include "Components/Button.h"
 #include "Components/Image.h"
@@ -23,15 +24,15 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 	const FDialogueTableData* CurDialogueTableData = StringManager->GetDialogueTableData(DialogueIndex);
 	if (CurDialogueTableData == nullptr)
 	{
-		// error
+		FAPI_DebugUtils::ShowError("UDialogueWidget::UpdateDialogueText() DialogueTableData not exist. DialogueID : ", DialogueIndex);
 		return;
 	}
 
 	CurDialogueID = DialogueIndex;
-	const FScriptTableData* CurScriptTableData = StringManager->GetScriptTableData(DialogueIndex);
+	const FScriptTableData* CurScriptTableData = StringManager->GetScriptTableData(CurDialogueTableData->ShowScriptID);
 	if ( CurScriptTableData == nullptr )
 	{
-		//error
+		FAPI_DebugUtils::ShowError("UDialogueWidget::UpdateDialogueText() ScriptTableData not exist. DialogueID : ", DialogueIndex);
 		return;
 	}
 	
@@ -100,43 +101,39 @@ void UDialogueWidget::OnNextButtonClicked()
 	}
 
 	// 다음 대사가 없을 경우, UI 끄기
-	if (CurDialogueTableData->NextDialogueConditions.IsEmpty() == true)
+	if (CurDialogueTableData->DefaultNextDialogueID == VALUE_NUMBER_ZERO)
 	{
 		SetShowUI(false);
 		return;
 	}
-	
+
 	// 캐릭터 대사 분기 체크
-	int NextDialogueID = 0;
-	for (int Index = 0; Index < CurDialogueTableData->NextDialogueConditions.Num(); Index++)
+	int NextDialogueID = VALUE_NUMBER_ZERO;
+	switch (CurDialogueTableData->ConditionType)
 	{
-		FDialogCondition DialogCondition = CurDialogueTableData->NextDialogueConditions[Index];
-		switch (DialogCondition.ConditionType)
+	case EConditionType::CT_HAS_ITEM:
 		{
-		case EConditionType::CT_HAS_ITEM:
-			{
-				// todo : 조건체크
-				NextDialogueID = DialogCondition.DialogueID;
-			}
-			break;
-		case EConditionType::CT_PROGRESS:
-			{
-				// todo : 조건체크
-				NextDialogueID = DialogCondition.DialogueID;
-			}
-			break;
-		case EConditionType::CT_NONE:
-			{
-				// todo : 조건체크
-				NextDialogueID = DialogCondition.DialogueID;
-			}
-			break;
-		default:
-			{
-				// error		
-			}
-			break;
+			// todo : 조건 체크
+			NextDialogueID = CurDialogueTableData->ConditionNextDialogueID;
 		}
+		break;
+	case EConditionType::CT_PROGRESS:
+		{
+			// todo : 조건 체크
+			NextDialogueID = CurDialogueTableData->ConditionNextDialogueID;
+		}
+		break;
+	default:
+		{
+			
+		}
+		break;
+	}
+
+	// 분기 체크에 걸리지 않을 경우, 기본 다음 진행 대사로 설정
+	if (NextDialogueID == VALUE_NUMBER_ZERO)
+	{
+		NextDialogueID = CurDialogueTableData->DefaultNextDialogueID;
 	}
 
 	UpdateDialogueText(NextDialogueID);
