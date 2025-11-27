@@ -1,0 +1,6 @@
+﻿RowName,ScriptID,CharacterID,ScriptShowName,ScriptShowDesc,CharacterImageName,CachedCharacterSprite,CharacterImagePosition,ScriptImageName,CachedImageSprite,GainItemID,ShowTooltipID
+대사1,1,CI_PLAYER,탐정,여기 수상한 물건이 있어,TempImageSprite,,TRUE,,,,
+대사2,2,CI_NPC_01,탐정,확인해 볼까?,,,FALSE,TempImageSprite,,,
+대사3,3,CI_PLAYER,탐정,"(아이템 획득, 수첩에서 확인 가능)",TempImageSprite,,TRUE,,,100,
+대사4,4,,,테스트용 대사,,,,,,,1
+대사5,5,,,테스트용 대사2,,,,,,,2

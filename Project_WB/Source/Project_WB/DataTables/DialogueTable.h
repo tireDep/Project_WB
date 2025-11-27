@@ -24,34 +24,58 @@ struct FScriptTableData : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	// 키
+	// 대사 ID
+	// * 중복되는 값 불가능!
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
 	int ScriptID;
-
-	// 대화 표시 스프라이트
+	
+	// 캐릭터 ID
+	// * CI_PLAYER : 플레이어
+	// * CI_NPC_01 ~ CI_NPC_06 : NPC
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	UPaperSprite* CharacterSprite;
-
-	// 대화 표시 이름
+	ECharacterID CharacterID;
+	
+	// 출력 이름
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
 	FString ScriptShowName;
-
-	// 대화 내용
+	
+	// 출력 대사
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	FString ScriptDesc;
-
-	// 이미지 스프라이트
+	FString ScriptShowDesc;
+	
+	// 캐릭터 이미지 파일
+	// * 파일명을 대문자로 확장자 없이 작성
+	// * 정해진 경로에 파일이 존재해야함
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	UPaperSprite* ScriptImageSprite;
+	FString CharacterImageName;
 
-	// 획득 아이템 ID
+	// 캐릭터 이미지 스프라이트 캐시 데이터
+	UPROPERTY()
+	UPaperSprite* CachedCharacterSprite;
+	
+	// 이미지 위치
+	// * true : 오른쪽, false : 왼쪽
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	bool CharacterImagePosition;
+	
+	// 대사 이미지 파일
+	// * 파일명을 대문자로 확장자 없이 작성
+	// * 정해진 경로에 파일이 존재해야함
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
+	FString ScriptImageName;
+
+	// 대사 이미지 스프라이트 캐시 데이터
+	UPROPERTY()
+	UPaperSprite* CachedImageSprite;
+	
+	// 획득 가능 아이템 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
 	int GainItemID;
 
 	// TODO : 
-	// 툴팁 ID
+	// 표시 툴팁 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Script Table")
-	int TooltipID;
+	int ShowTooltipID;
 
 	// TODO
 	// 추가효과가 붙는다면 이쪽에 추가
@@ -63,13 +87,17 @@ struct FScriptTableData : public FTableRowBase
 	
 	void Init()
 	{
-		ScriptID = VALUE_NUMBER_ZERO;
-		CharacterSprite = nullptr;
-		ScriptShowName = FString("Default");
-		ScriptDesc = FString("Default");
-		ScriptImageSprite = nullptr;
-		GainItemID = VALUE_NUMBER_ZERO;
-		TooltipID = VALUE_NUMBER_ZERO;
+		ScriptID				= VALUE_NUMBER_ZERO;
+		CharacterID				= ECharacterID::CI_INVALID;
+		ScriptShowName			= FString("");
+		ScriptShowDesc			= FString("");
+		CharacterImageName		= FString("");
+		CachedCharacterSprite	= nullptr;
+		CharacterImagePosition	= false;
+		ScriptImageName			= FString("");
+		CachedImageSprite		= nullptr;
+		GainItemID				= VALUE_NUMBER_ZERO;
+		ShowTooltipID			= VALUE_NUMBER_ZERO;
 	}
 };
 
@@ -80,6 +108,7 @@ struct FDialogueTableData : public FTableRowBase
 	GENERATED_BODY()
 
 	// 대화 ID
+	// * 중복되는 값 불가능!
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
 	int DialogueID;
 	
@@ -91,15 +120,15 @@ struct FDialogueTableData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table")
 	int DefaultNextDialogueID;
 	
-	// 대사 분기 타입
+	// 대화 분기 타입
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
 	EConditionType ConditionType;
 
-	// 대사 분기 값
+	// 대화 분기 값
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
 	FString ConditionValue;
 
-	// 대사 분기 다음 진행 대화 ID
+	// 대화 분기 다음 진행 대화 ID
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue Table Condition")
 	int ConditionNextDialogueID;
 

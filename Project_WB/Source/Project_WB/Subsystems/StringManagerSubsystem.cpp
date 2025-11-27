@@ -45,6 +45,7 @@ bool UStringManagerSubsystem::LoadScriptTable()
 {
 	ScriptTableData.Empty();
 
+	bool bResult = true;
 	// DefaultGame.ini에 작성된 파일명으로 로드
 	for (int Index = 0; Index < ScriptTablePaths.Num(); Index++ )
 	{
@@ -64,14 +65,42 @@ bool UStringManagerSubsystem::LoadScriptTable()
 
 		for (FScriptTableData* Row : AllRows)
 		{
-			if ( Row == nullptr )
+			if (Row == nullptr)
 				continue;
+
+			if (ScriptTableData.Contains(Row->ScriptID) == true)
+			{
+				// error!
+				bResult = false;
+				continue;
+			}
+
+			if (Row->CharacterID == ECharacterID::CI_INVALID || Row->CharacterID == ECharacterID::CI_Max)
+			{
+				// error!
+				bResult = false;
+				continue;
+			}
+			
+			// todo : 이미지 파일 경로 지정 필요. 현재 임시 경로 및 임시 파일 지정 상태
+			// ex) /Script/Paper2D.PaperSprite'/Game/Assets/TempImageSprite.TempImageSprite'
+			if (Row->CharacterImageName.IsEmpty() == false)
+			{
+				FString Path = FString::Printf(TEXT("/Script/Paper2D.PaperSprite'/Game/Assets/%s.%s'"), *Row->CharacterImageName, *Row->CharacterImageName);
+				Row->CachedCharacterSprite = LoadObject<UPaperSprite>(nullptr, *Path);
+			}
+
+			if (Row->ScriptImageName.IsEmpty() == false)
+			{
+				FString Path = FString::Printf(TEXT("/Script/Paper2D.PaperSprite'/Game/Assets/%s.%s'"), *Row->ScriptImageName, *Row->ScriptImageName);
+				Row->CachedImageSprite = LoadObject<UPaperSprite>(nullptr, *Path);
+			}
 		
 			ScriptTableData.Add(Row->ScriptID, *Row);
 		}
 	}
-
-	return true;
+	
+	return bResult;
 }
 
 // 대화 테이블 로드
@@ -93,15 +122,23 @@ bool UStringManagerSubsystem::LoadDialogueTable()
 	TArray<FDialogueTableData*> AllRows;
 	LoadTable->GetAllRows<FDialogueTableData>(TEXT("Dialogue_GetAllRows"), AllRows);
 
+	bool bResult = true;
 	for (FDialogueTableData* Row : AllRows)
 	{
 		if ( Row == nullptr )
 			continue;
+
+		if (DialogueTableData.Contains(Row->DialogueID) == true)
+		{
+			// error!
+			bResult = false;
+			continue;
+		}
 		
 		DialogueTableData.Add(Row->DialogueID, *Row);
 	}
 
-	return true;
+	return bResult;
 }
 
 // 대사 테이블 정보 리턴

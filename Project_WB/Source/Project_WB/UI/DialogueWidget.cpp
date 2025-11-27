@@ -58,19 +58,19 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 
 	// 업데이트
 	// 캐릭터 이미지
-	if (CurScriptTableData->CharacterSprite != nullptr)
-		CharacterImage->SetBrushFromAtlasInterface(CurScriptTableData->CharacterSprite);
+	if (CurScriptTableData->CachedCharacterSprite != nullptr)
+		CharacterImage->SetBrushFromAtlasInterface(CurScriptTableData->CachedCharacterSprite);
 	
 	// 캐릭터 이름
 	ScriptName->SetText( FText::FromString(CurScriptTableData->ScriptShowName) );
 	
 	// 캐릭터 대사
-	ScriptDesc->SetText( FText::FromString(CurScriptTableData->ScriptDesc) );
+	ScriptDesc->SetText( FText::FromString(CurScriptTableData->ScriptShowDesc) );
 	
 	// 대사 이미지
-	if (CurScriptTableData->ScriptImageSprite != nullptr)
+	if (CurScriptTableData->CachedImageSprite != nullptr)
 	{
-		ScriptImage->SetBrushFromAtlasInterface(CurScriptTableData->ScriptImageSprite);
+		ScriptImage->SetBrushFromAtlasInterface(CurScriptTableData->CachedImageSprite);
 		ScriptImage->SetVisibility(ESlateVisibility::Visible);
 	}
 	
