@@ -19,11 +19,19 @@ public:
 
 	// 대화문 설정
 	UFUNCTION(BlueprintCallable, Category="Dialogue")
-	void UpdateDialogueText(int DialogueIndex);
+	void UpdateDialogueText(int DialogueIndex, bool ShowTalkOption = false);
 
 	// 다음 버튼 선택시_대화문 설정
 	UFUNCTION(BlueprintCallable, Category="Dialogue")
 	void OnNextButtonClicked();
+
+	// 제시 버튼 선택시_대화 상태에 따른 ui 변경
+	UFUNCTION(BlueprintCallable, Category="Dialogue")
+	void OnSuggestButtonClicked();
+
+	// 대화 종료 버튼 선택시_대화 상태 종료 처리
+	UFUNCTION(BlueprintCallable, Category="Dialogue")
+	void OnExitButtonClicked();
 
 protected:
 	virtual void OnShow_Implementation() override;
@@ -51,7 +59,10 @@ protected:
 
 	// 캐릭터 이미지
 	UPROPERTY(meta = (BindWidget))
-	UImage* CharacterImage;
+	UImage* CharacterImageRight;
+	
+	UPROPERTY(meta = (BindWidget))
+	UImage* CharacterImageLeft;
 
 	// 대사 이미지
 	UPROPERTY(meta = (BindWidget))

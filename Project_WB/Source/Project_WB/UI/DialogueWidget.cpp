@@ -15,7 +15,7 @@ UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : 
 }
 
 // UI 업데이트
-void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
+void UDialogueWidget::UpdateDialogueText(int DialogueIndex, bool ShowTalkOption/*= false*/)
 {
 	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
 	if ( StringManager == nullptr )
@@ -39,7 +39,8 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 	CurScriptID = CurScriptTableData->ScriptID;
 	if ( ScriptName == nullptr
 		|| ScriptDesc == nullptr
-		|| CharacterImage == nullptr
+		|| CharacterImageRight == nullptr
+		|| CharacterImageLeft == nullptr
 		|| ScriptImage == nullptr
 		|| NextButton == nullptr
 		|| SuggestButton == nullptr
@@ -51,6 +52,8 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 	}
 	
 	// 초기화
+	CharacterImageRight->SetVisibility(ESlateVisibility::Hidden);
+	CharacterImageLeft->SetVisibility(ESlateVisibility::Hidden);
 	ScriptImage->SetVisibility(ESlateVisibility::Hidden);
 	ItemNoteButton->SetVisibility(ESlateVisibility::Hidden);
 	SuggestButton->SetVisibility(ESlateVisibility::Hidden);
@@ -59,7 +62,32 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 	// 업데이트
 	// 캐릭터 이미지
 	if (CurScriptTableData->CachedCharacterSprite != nullptr)
-		CharacterImage->SetBrushFromAtlasInterface(CurScriptTableData->CachedCharacterSprite);
+	{
+		UImage* NowTalkCharacter = nullptr;
+		UImage* LastTalkCharacter = nullptr;
+		if (CurScriptTableData->CharacterImagePosition == true )
+		{
+			NowTalkCharacter = CharacterImageRight;
+			LastTalkCharacter = CharacterImageLeft;
+		}
+		else
+		{
+			NowTalkCharacter = CharacterImageLeft;
+			LastTalkCharacter = CharacterImageRight;
+		}
+
+		// 현재 말하는 캐릭터 이미지 표시
+		NowTalkCharacter->SetBrushFromAtlasInterface(CurScriptTableData->CachedCharacterSprite);
+		NowTalkCharacter->SetVisibility(ESlateVisibility::Visible);
+		// NowTalkCharacter->SetColorAndOpacity(FLinearColor::Gray);
+
+		// todo : 
+		// // 대화하던 캐릭터가 있을 경우의 처리
+		// if (LastTalkCharacter->GetVisibility() != ESlateVisibility::Hidden)
+		// {
+		// 	
+		// }
+	}
 	
 	// 캐릭터 이름
 	ScriptName->SetText( FText::FromString(CurScriptTableData->ScriptShowName) );
@@ -80,10 +108,15 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 		// todo : 아이템 획득 처리
 		ItemNoteButton->SetVisibility(ESlateVisibility::Visible);
 	}
-
-	// todo : 이거 두개 체크할 방법이 필요
-	// 아이템 제시 버튼
-	// 대화 종료 버튼
+	
+	if (ShowTalkOption == true)
+	{
+		// 아이템 제시 버튼
+		SuggestButton->SetVisibility(ESlateVisibility::Visible);
+		
+		// 대화 종료 버튼
+		ExitButton->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 // 다음 대화문 정보가 있는지 체크 후 업데이트
@@ -139,6 +172,17 @@ void UDialogueWidget::OnNextButtonClicked()
 	UpdateDialogueText(NextDialogueID);
 }
 
+void UDialogueWidget::OnSuggestButtonClicked()
+{
+	// todo : 대화 상태인지 체크 필요
+}
+
+void UDialogueWidget::OnExitButtonClicked()
+{
+	// todo : 대화 상태 해제
+	SetShowUI(false);
+}
+
 // UI 열때 , 블루프린트 추가 구현 가능
 void UDialogueWidget::OnShow_Implementation()
 {
@@ -159,6 +203,14 @@ void UDialogueWidget::OnInitialize_Implementation()
 	// 다음 버튼 함수 지정
 	if (NextButton != nullptr)
 		NextButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnNextButtonClicked);
+
+	// 아이템 제시 버튼 함수 지정
+	if (SuggestButton != nullptr)
+		SuggestButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnSuggestButtonClicked);
+	
+	// 대화 종료 버튼 함수 지정
+	if (ExitButton != nullptr)
+		ExitButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnExitButtonClicked);
 }
 
 // 포커스 획득, 블루프린트 추가 구현 가능
