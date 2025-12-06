@@ -5,6 +5,13 @@
 #include "Project_WB/Characters/CharacterBase/CharacterActorBase.h"
 #include "PlayerActor.generated.h"
 
+enum PlayerState
+{
+	PS_IDLE,
+	PS_TALKING_ITEM,
+	PS_TALKING_NPC,
+};
+
 UCLASS()
 class PROJECT_WB_API APlayerActor : public ACharacterActorBase
 {
@@ -19,7 +26,9 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	PlayerState GetState()	{ return CurrentState; }
+	void SetState(PlayerState NewState) { CurrentState = NewState; };
+
 private:
-	// iteninfo
-	// playercontroller
+	PlayerState CurrentState;
 };

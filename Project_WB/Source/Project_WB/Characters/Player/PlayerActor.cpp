@@ -4,6 +4,7 @@
 APlayerActor::APlayerActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	CurrentState = PlayerState::PS_IDLE;
 }
 
 void APlayerActor::BeginPlay()

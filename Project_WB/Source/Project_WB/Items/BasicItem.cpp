@@ -7,6 +7,7 @@
 #include "Project_WB/Characters/CharacterBase/CharacterActorBase.h"
 #include "Project_WB/Characters/Player/PlayerActor.h"
 #include "Project_WB/CommonComponents/Interaction/MouseInteractionComponent.h"
+#include "Project_WB/Subsystems/GameManagerSubsystem.h"
 #include "Project_WB/Subsystems/StringManagerSubsystem.h"
 #include "Project_WB/Subsystems/UIManagerSubsystem.h"
 #include "Project_WB/UI/DialogueWidget.h"
@@ -16,6 +17,7 @@ ABasicItem::ABasicItem()
 	
 }
 
+// 
 int ABasicItem::GetDialogueIndex(ECharacterID CharacterID)
 {
 	int ResultDialogueIndex = 0;
@@ -58,8 +60,18 @@ void ABasicItem::OnItemMouseExit(AActor* Actor)
 	//FAPI_DebugUtils::ShowInfo( L"----------------Item MouseExit!" );
 }
 
+// 아이템 선택시, 실행 되는 함수
 void ABasicItem::OnItemMouseClick(AActor* Actor)
 {
+	// 플레이어 상태 변경
+	UGameManagerSubsystem* GameManager = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>();
+	if (GameManager != nullptr)
+	{
+		APlayerActor* PlayerActor = GameManager->GetPlayerActor();
+		if (PlayerActor != nullptr)
+			PlayerActor->SetState(PlayerState::PS_TALKING_ITEM);	
+	}
+	
 	// todo : 추후 재 확인. 블루프린트에서 생성하는 것으로 변경해둠.
 	// AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
 	// if (FindActor == nullptr)

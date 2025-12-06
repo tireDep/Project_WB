@@ -6,7 +6,9 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Project_WB/Characters/Player/PlayerActor.h"
 #include "Project_WB/DataTables/DialogueTable.h"
+#include "Project_WB/Subsystems/GameManagerSubsystem.h"
 #include "Project_WB/Subsystems/StringManagerSubsystem.h"
 
 UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -15,7 +17,7 @@ UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : 
 }
 
 // UI 업데이트
-void UDialogueWidget::UpdateDialogueText(int DialogueIndex, bool ShowTalkOption/*= false*/)
+void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 {
 	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
 	if ( StringManager == nullptr )
@@ -52,8 +54,6 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex, bool ShowTalkOption/
 	}
 	
 	// 초기화
-	CharacterImageRight->SetVisibility(ESlateVisibility::Hidden);
-	CharacterImageLeft->SetVisibility(ESlateVisibility::Hidden);
 	ScriptImage->SetVisibility(ESlateVisibility::Hidden);
 	ItemNoteButton->SetVisibility(ESlateVisibility::Hidden);
 	SuggestButton->SetVisibility(ESlateVisibility::Hidden);
@@ -82,11 +82,11 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex, bool ShowTalkOption/
 		// NowTalkCharacter->SetColorAndOpacity(FLinearColor::Gray);
 
 		// todo : 
-		// // 대화하던 캐릭터가 있을 경우의 처리
-		// if (LastTalkCharacter->GetVisibility() != ESlateVisibility::Hidden)
-		// {
-		// 	
-		// }
+		// 대화하던 캐릭터가 있을 경우의 처리
+		if (LastTalkCharacter->GetVisibility() != ESlateVisibility::Hidden)
+		{
+			LastTalkCharacter->SetBrushTintColor(FLinearColor::White);
+		}
 	}
 	
 	// 캐릭터 이름
@@ -108,14 +108,19 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex, bool ShowTalkOption/
 		// todo : 아이템 획득 처리
 		ItemNoteButton->SetVisibility(ESlateVisibility::Visible);
 	}
-	
-	if (ShowTalkOption == true)
+
+	// 마지막 대사인 경우, 스테이트 상태에 따라 버튼 표시 제어
+	if (CheckIsFinalScript(CurDialogueTableData))
 	{
-		// 아이템 제시 버튼
-		SuggestButton->SetVisibility(ESlateVisibility::Visible);
+		// NPC와 대화중인 경우
+		if (PlayerActor != nullptr && PlayerActor->GetState() == PlayerState::PS_TALKING_NPC)
+		{
+			// 아이템 제시 버튼
+			SuggestButton->SetVisibility(ESlateVisibility::Visible);
 		
-		// 대화 종료 버튼
-		ExitButton->SetVisibility(ESlateVisibility::Visible);
+			// 대화 종료 버튼
+			ExitButton->SetVisibility(ESlateVisibility::Visible);	
+		}
 	}
 }
 
@@ -134,7 +139,7 @@ void UDialogueWidget::OnNextButtonClicked()
 	}
 
 	// 다음 대사가 없을 경우, UI 끄기
-	if (CurDialogueTableData->DefaultNextDialogueID == VALUE_NUMBER_ZERO)
+	if (CheckIsFinalScript(CurDialogueTableData) == true)
 	{
 		SetShowUI(false);
 		return;
@@ -179,7 +184,6 @@ void UDialogueWidget::OnSuggestButtonClicked()
 
 void UDialogueWidget::OnExitButtonClicked()
 {
-	// todo : 대화 상태 해제
 	SetShowUI(false);
 }
 
@@ -187,12 +191,28 @@ void UDialogueWidget::OnExitButtonClicked()
 void UDialogueWidget::OnShow_Implementation()
 {
 	Super::OnShow_Implementation();
+
+	if (CharacterImageRight != nullptr)
+		CharacterImageRight->SetVisibility(ESlateVisibility::Hidden);
+
+	if (CharacterImageLeft != nullptr)
+		CharacterImageLeft->SetVisibility(ESlateVisibility::Hidden);
+	
+	UGameManagerSubsystem* GameManager = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>();
+	if (GameManager == nullptr)
+		return;
+
+	PlayerActor = GameManager->GetPlayerActor();
 }
 
 // UI 닫을 때, 블루프린트 추가 구현 가능
 void UDialogueWidget::OnHide_Implementation()
 {
 	Super::OnHide_Implementation();
+
+	// 기본 상태로 변경
+	if (PlayerActor != nullptr)
+		PlayerActor->SetState(PlayerState::PS_IDLE);
 }
 
 // UI 초기화 할 때, 블루프린트 추가 구현 가능
@@ -223,4 +243,15 @@ void UDialogueWidget::OnGaindFocus_Implementation()
 void UDialogueWidget::OnLostFocus_Implementation()
 {
 	Super::OnLostFocus_Implementation();
+}
+
+// 마지막 대사인지 체크
+bool UDialogueWidget::CheckIsFinalScript(const FDialogueTableData* PtDialogueTableData)
+{
+	if (PtDialogueTableData->DefaultNextDialogueID == VALUE_NUMBER_ZERO
+		&& PtDialogueTableData->ConditionNextDialogueID == VALUE_NUMBER_ZERO
+		)
+		return true;
+	
+	return false;
 }

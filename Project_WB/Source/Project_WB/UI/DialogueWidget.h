@@ -8,6 +8,7 @@
 class UTextBlock;
 class UImage;
 class UButton;
+class APlayerActor;
 
 UCLASS()
 class PROJECT_WB_API UDialogueWidget : public UUIWidgetBase
@@ -19,7 +20,7 @@ public:
 
 	// 대화문 설정
 	UFUNCTION(BlueprintCallable, Category="Dialogue")
-	void UpdateDialogueText(int DialogueIndex, bool ShowTalkOption = false);
+	void UpdateDialogueText(int DialogueIndex);
 
 	// 다음 버튼 선택시_대화문 설정
 	UFUNCTION(BlueprintCallable, Category="Dialogue")
@@ -83,4 +84,11 @@ protected:
 	// 대화 종료 버튼
 	UPROPERTY(meta = (BindWidget))
 	UButton* ExitButton;
+
+private:
+	// 마지막 대사인지 체크
+	bool CheckIsFinalScript(const FDialogueTableData* PtDialogueTableData);
+
+	UPROPERTY()
+	APlayerActor* PlayerActor;
 };
