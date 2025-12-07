@@ -34,6 +34,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Dialogue")
 	void OnExitButtonClicked();
 
+	// 탐정 수첩 보기 버튼 선택시_탐정 수첩 UI 열기
+	UFUNCTION(BlueprintCallable, Category="Dialogue")
+	void OnItemNoteButtonClicked();
+
 protected:
 	virtual void OnShow_Implementation() override;
 	virtual void OnHide_Implementation() override;
@@ -58,10 +62,11 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ScriptDesc;
 
-	// 캐릭터 이미지
+	// 오른쪽 캐릭터 이미지
 	UPROPERTY(meta = (BindWidget))
 	UImage* CharacterImageRight;
-	
+
+	// 왼쪽 캐릭터 이미지
 	UPROPERTY(meta = (BindWidget))
 	UImage* CharacterImageLeft;
 

@@ -105,8 +105,11 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 	// 탐정 수첩 확인 버튼
 	if (CurScriptTableData->GainItemID != 0)
 	{
-		// todo : 아이템 획득 처리
 		ItemNoteButton->SetVisibility(ESlateVisibility::Visible);
+
+		// 아이템 획득 처리
+		if (PlayerActor != nullptr)
+			PlayerActor->AddGainedItem(CurScriptTableData->GainItemID);
 	}
 
 	// 마지막 대사인 경우, 스테이트 상태에 따라 버튼 표시 제어
@@ -177,14 +180,23 @@ void UDialogueWidget::OnNextButtonClicked()
 	UpdateDialogueText(NextDialogueID);
 }
 
+// NPC와의 대화에서 제시하기 버튼 선택 시
+// 대화 창 위에 탐정 수첩이 '제시 상태'로 열림
 void UDialogueWidget::OnSuggestButtonClicked()
 {
 	// todo : 대화 상태인지 체크 필요
 }
 
+// 대화 종료 버튼 선택 시
 void UDialogueWidget::OnExitButtonClicked()
 {
 	SetShowUI(false);
+}
+
+// 탐정 수첩 버튼 선택 시
+// 대화 창 위에 탐정 수첩이 '기본 상태'로 열림
+void UDialogueWidget::OnItemNoteButtonClicked()
+{
 }
 
 // UI 열때 , 블루프린트 추가 구현 가능
