@@ -12,6 +12,23 @@ enum PlayerState
 	PS_TALKING_NPC,
 };
 
+struct ItemInformation
+{
+	int ItemID;										// 아이템 아이디
+	TSet<ECharacterID> InteractionCharacterIDs;		// 상호작용한 캐릭터 정보
+
+	ItemInformation()
+	{
+		Init();
+	}
+
+	void Init()
+	{
+		ItemID = 0;
+		InteractionCharacterIDs.Empty();
+	}
+};
+
 UCLASS()
 class PROJECT_WB_API APlayerActor : public ACharacterActorBase
 {
@@ -42,13 +59,12 @@ public:
 	void UpdateGainedItemInfo(int ItemID, ECharacterID UpdateCharacterID);
 
 	// 획득한 아이템 정보 반환
-	const TMap<int, TSet<ECharacterID>> GetGainedItems() { return GainedItemInfo;}
+	const TArray<ItemInformation> GetGainedItems() { return ItemInformations;}
 	
 private:
 	// 플레이어 상태
 	PlayerState CurrentState;
 
 	// 보유한 아이템 정보
-	// TMap<ItemID, TSet<CharacterID>>
-	TMap<int, TSet<ECharacterID>> GainedItemInfo;
+	TArray<ItemInformation> ItemInformations;
 };

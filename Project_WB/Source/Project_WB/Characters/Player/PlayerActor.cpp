@@ -1,11 +1,13 @@
 ﻿
 #include "PlayerActor.h"
 
+#include "Algo/ForEach.h"
+
 APlayerActor::APlayerActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	CurrentState = PlayerState::PS_IDLE;
-	GainedItemInfo.Empty();
+	ItemInformations.Empty();
 }
 
 void APlayerActor::BeginPlay()
@@ -25,40 +27,47 @@ void APlayerActor::AddGainedItem(int ItemID)
 	if (CheckGainedItemInfo(ItemID) == true)
 		return;
 
-	TSet<ECharacterID> CharacterInfo;
-	GainedItemInfo.Add(ItemID, CharacterInfo);
+	ItemInformation ItemInfo;
+	ItemInfo.ItemID = ItemID;
+	ItemInformations.Add(ItemInfo);
 }
 
 // 아이템 정보 체크
 bool APlayerActor::CheckGainedItemInfo(int ItemID, ECharacterID CheckCharacterID/*= ECharacterID::CI_INVALID*/)
 {
 	// 보유한 아이템인지 체크
-	auto FindIter = GainedItemInfo.Find(ItemID);
-	if (FindIter == nullptr)
-		return false;
-
-	// 보유한 아이템이고, 캐릭터 정보가 포함되어 있는지 체크
-	if (CheckCharacterID != ECharacterID::CI_INVALID)
+	for (ItemInformation ItemInfo : ItemInformations)
 	{
-		if (FindIter->Find(CharacterID) == nullptr)
-			return false;
+		if (ItemInfo.ItemID != ItemID)
+			continue;
+
+		// 보유한 아이템일 경우, 캐릭터 정보가 포함되어 있는지 체크
+		// 캐릭터 정보가 없는 경우 : 아이템 획득 시
+		if (CheckCharacterID == ECharacterID::CI_INVALID)
+			return true;
+
+		// 캐릭터 정보가 있는 경우 : 탐정 수첩 상호작용 시(플레이어, npc)
+		if (ItemInfo.InteractionCharacterIDs.Contains(CheckCharacterID) == true)
+			return true;
 	}
 
-	return true;
+	return false; 
 }
 
 // 아이템 정보 업데이트
 void APlayerActor::UpdateGainedItemInfo(int ItemID, ECharacterID UpdateCharacterID)
 {
-	// 이미 업데이트 된 정보라면 끝냄
-	if (CheckGainedItemInfo(ItemID, UpdateCharacterID) == true)
-		return;
+	for (ItemInformation ItemInfo : ItemInformations)
+	{
+		if (ItemInfo.ItemID != ItemID)
+			continue;
 
-	// 아이템 상호작용 정보 업데이트
-	auto FindItem = GainedItemInfo.Find(ItemID);
-	if (FindItem == nullptr)
-		return;
-
-	FindItem->Add(UpdateCharacterID);
+		// 이미 상호작용 정보가 있다면, 추가로 저장하지 않음
+		if (ItemInfo.InteractionCharacterIDs.Find(UpdateCharacterID) != nullptr)
+			return;
+		
+		// 아이템 상호작용 정보 업데이트
+		ItemInfo.InteractionCharacterIDs.Add(UpdateCharacterID);
+	}
 }
 
