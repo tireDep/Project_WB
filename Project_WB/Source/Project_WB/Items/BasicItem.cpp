@@ -28,22 +28,10 @@ int ABasicItem::GetDialogueIndex(ECharacterID CharacterID)
 	return ResultDialogueIndex;
 }
 
-void ABasicItem::SetDialogueTextInfo(ECharacterID CharacterID, UUserWidget* Widget)
-{
-	int DialogueIndex = 0;
-	auto DialogKey = DialogInfo.Find( CharacterID );
-	if (DialogKey != nullptr)
-		DialogueIndex = *DialogKey;
-
-	UDialogueWidget* DialogueWidget = Cast<UDialogueWidget>(Widget);
-	if (DialogueWidget != nullptr)
-		DialogueWidget->UpdateDialogueText(DialogueIndex);
-}
-
 void ABasicItem::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	MouseInteractionComponent->OnMouseOverEvent.AddDynamic(this, &ABasicItem::OnItemMouseOver);
 	MouseInteractionComponent->OnMouseReleaseEvent.AddDynamic(this, &ABasicItem::OnItemMouseReleased);
 	MouseInteractionComponent->OnMouseClickEvent.AddDynamic(this, &ABasicItem::OnItemMouseClick);
@@ -63,48 +51,33 @@ void ABasicItem::OnItemMouseExit(AActor* Actor)
 // 아이템 선택시, 실행 되는 함수
 void ABasicItem::OnItemMouseClick(AActor* Actor)
 {
-	// 플레이어 상태 변경
 	UGameManagerSubsystem* GameManager = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>();
-	if (GameManager != nullptr)
-	{
-		APlayerActor* PlayerActor = GameManager->GetPlayerActor();
-		if (PlayerActor != nullptr)
-			PlayerActor->SetState(PlayerState::PS_TALKING_ITEM);	
-	}
+	if (GameManager == nullptr)
+		return;
+		
+	APlayerActor* PlayerActor = GameManager->GetPlayerActor();
+	if (PlayerActor == nullptr)
+		return;
+		
+	// 플레이어 상태 변경
+	PlayerActor->SetState(PlayerState::PS_TALKING_ITEM);
 	
-	// todo : 추후 재 확인. 블루프린트에서 생성하는 것으로 변경해둠.
-	// AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
-	// if (FindActor == nullptr)
-	// 	return;
-	//
-	// APlayerActor* PlayerActor = Cast<APlayerActor>(FindActor);
-	// if (PlayerActor == nullptr)
-	// 	return;
-	//
-	// int DialogKeyIndex = 0;
-	// // 이미 수집한 아이템인지 체크 필요
-	//
-	// ECharacterID CharacterID = PlayerActor->GetCharacterID();
-	// auto DialogKey = DialogInfo.Find( CharacterID );
-	// if (DialogKey == nullptr)
-	// {
-	// 	return;	
-	// }
-	//
-	// DialogKeyIndex = *DialogKey;
-	//
-	// // 대화창 열기
-	// UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
-	// if ( StringManager == nullptr )
-	// 	return;
-	//
-	// const FScriptTableData* ScriptTableData = StringManager->GetScriptTableData(DialogKeyIndex);
-	// if ( ScriptTableData == nullptr )
-	// 	return;	
-	//
-	// UUIManagerSubsystem* UIManager = GetUISubsystem();
-	// if ( UIManager == nullptr )
-	// 	return;
+	// todo : 이미 수집한 아이템인지 체크 필요
+	ECharacterID CharacterID = PlayerActor->GetCharacterID();
+	auto DialogKey = DialogInfo.Find( CharacterID );
+	if (DialogKey == nullptr)
+		return;
+	
+	// 대화창 열기
+	int DialogKeyIndex = *DialogKey;
+	UUIManagerSubsystem* UIManager = GetUISubsystem();
+	if ( UIManager == nullptr )
+		return;
+
+	UIManager->SetShowUI(EUIType::UT_Dialogue, true);
+	UDialogueWidget* DialogueWidget = Cast<UDialogueWidget>(UIManager->GetUIWidget(EUIType::UT_Dialogue));
+	if (DialogueWidget != nullptr)
+		DialogueWidget->UpdateDialogueText(DialogKeyIndex);
 }
 
 void ABasicItem::OnItemMouseReleased(AActor* Actor)

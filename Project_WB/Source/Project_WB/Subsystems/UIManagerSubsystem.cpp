@@ -5,12 +5,12 @@
 #include "Kismet/GameplayStatics.h"
 // #include "Project_WB/Characters/Player/PlayerActor.h"
 // #include "Project_WB/UI/DialogueWidget.h"
+#include "Project_WB/DataTables/WidgetInfoTable.h"
 #include "Project_WB/UI/UIWidgetBase.h"
 
 UUIManagerSubsystem::UUIManagerSubsystem()
 {
-	InitializeUILayerInfo();
-	InitializeWidgetClasses();
+	InitializeWidgetInfo();
 }
 
 UUIManagerSubsystem::~UUIManagerSubsystem()
@@ -64,47 +64,11 @@ bool UUIManagerSubsystem::CheckIsUITypeValid(EUIType UIType)
 	return true;
 }
 
-UUIWidgetBase* UUIManagerSubsystem::GetCheckUICreated(EUIType UIType)
-{
-	UUIWidgetBase* ReturnWidget = nullptr;
-	if (CheckIsUITypeValid(UIType) == true)
-	{
-		UUIWidgetBase* Widget = GetUIWidget(UIType);
-		if (Widget != nullptr)
-			ReturnWidget = Widget;
-	}
-	
-	return ReturnWidget;
-}
-
-void UUIManagerSubsystem::AddUIInfo(UUIWidgetBase* AddWidget, bool bVisible)
-{
-	if (AddWidget == nullptr)
-		return;
-
-	// UI 정보 저장
-	UIWidgetMap.Add(AddWidget->GetUIType(), AddWidget);
-	
-	AddWidget->AddToViewport();
-
-	if (bVisible==true)
-	{
-		SetShowUI( AddWidget->GetUIType(), true );
-	}
-	else
-	{
-		SetShowUI( AddWidget->GetUIType(), false );
-	}
-}
-
 // UI 위젯 가져오기
 UUIWidgetBase* UUIManagerSubsystem::GetUIWidget(EUIType UIType)
 {
-	if (UIType == EUIType::UT_Invalid || UIType == EUIType::UT_Max)
-	{
-		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::GetUIWidget Invalid UIType returned" );
-		return nullptr;	
-	}
+	if (CheckIsUITypeValid(UIType) == false)
+		return nullptr;
 
 	// 생성된 위젯이 있는지 탐색
 	UUIWidgetBase** FindWidget = UIWidgetMap.Find(UIType);
@@ -313,27 +277,36 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 	return NewWidget;
 }
 
-// 기본 ZOrder 설정
-void UUIManagerSubsystem::InitializeUILayerInfo()
-{
-	// 숫자가 높을수록 상위 레이어
-	UILayerInfoMap.Add(EUIType::UT_Dialogue, FUILayerInfo{ EUIType::UT_Dialogue, 15, false });
-	UILayerInfoMap.Add(EUIType::UT_Dialogue, FUILayerInfo{ EUIType::UT_ItemNote, 20, false });
-}
-
-// 블루프린트 UI 정보 초기화
+// 블루프린트 UI 정보 초기화 및 기본 ZOrder 설정(숫자가 높을 수록 상위 레이어)
 // !생성자에서만 FClassFinder 사용 가능, 그 외의 곳에서는 크래시!
-void UUIManagerSubsystem::InitializeWidgetClasses()
+void UUIManagerSubsystem::InitializeWidgetInfo()
 {
-	// UI수가 많지 않아서 코드에서 호출하는 방식으로 사용
-	// todo : zorder랑 함께 테이블화 해서 로드로 변경
-	ConstructorHelpers::FClassFinder<UUIWidgetBase> DialogueBP(TEXT("/Game/Widgets/WBP_DialogueWidget"));
-	if (DialogueBP.Succeeded())
-	    UIWidgetClasses.Add(EUIType::UT_Dialogue, DialogueBP.Class);
+	// UI수가 많지 않아서 테이블 정보를 코드에서 호출하는 방식으로 사용
+	UDataTable* LoadTable = Cast<UDataTable>(
+		StaticLoadObject(UDataTable::StaticClass(),
+			nullptr,
+			TEXT("/Game/DataTables/DT_WidgetInfoTable.DT_WidgetInfoTable"))
+			);
+	if ( LoadTable == nullptr )
+	{
+		FAPI_DebugUtils::ShowError("UUIManagerSubsystem::InitializeWidgetInfo() failed!");
+		return;
+	}
 
-	ConstructorHelpers::FClassFinder<UUIWidgetBase> ItemNoteBP(TEXT("/Game/Widgets/WBP_ItemNoteWidget"));
-	if (ItemNoteBP.Succeeded())
-		UIWidgetClasses.Add(EUIType::UT_ItemNote, ItemNoteBP.Class);
+	TArray<FWidgetInfoTable*> AllRows;
+	LoadTable->GetAllRows<FWidgetInfoTable>(TEXT("WidgetInfo_GetAllRows"), AllRows);
+	for (FWidgetInfoTable* Row : AllRows)
+	{
+		ConstructorHelpers::FClassFinder<UUIWidgetBase> WidgetBP(*Row->PathWBP);
+		if (WidgetBP.Succeeded() == false)
+		{
+			FAPI_DebugUtils::ShowError("UUIManagerSubsystem::InitializeWidgetInfo() FClassFinder not Succeeded. PathWBP : " + Row->PathWBP);
+			continue;
+		}
+		
+		UIWidgetClasses.Add(Row->UIType, WidgetBP.Class);
+		UILayerInfoMap.Add(Row->UIType, FUILayerInfo{ Row->UIType, Row->WidgetZOrder, false });
+	}
 }
 
 void UUIManagerSubsystem::UpdateInputMode()

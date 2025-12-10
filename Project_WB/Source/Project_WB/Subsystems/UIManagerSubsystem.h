@@ -46,7 +46,7 @@ class PROJECT_WB_API UUIManagerSubsystem : public UGameInstanceSubsystem
 
 public:
 	UUIManagerSubsystem();
-	virtual ~UUIManagerSubsystem();
+	virtual ~UUIManagerSubsystem() override;
 	
 	// Subsystem 초기화
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -55,14 +55,6 @@ public:
 	// UI 타입 체크
 	UFUNCTION()
 	bool CheckIsUITypeValid(EUIType UIType);
-
-	// UI 생성 여부 체크
-	UFUNCTION(BlueprintCallable, Category="UI")
-	UUIWidgetBase* GetCheckUICreated(EUIType UIType);
-
-	// UI 추가
-	UFUNCTION(BlueprintCallable, Category="UI")
-	void AddUIInfo(UUIWidgetBase* AddWidget, bool bVisible);
 
 	// UI 위젯 가져오기
 	// UIType : 가져올 UI 타입
@@ -114,15 +106,11 @@ public:
 	void BringUIToFront(EUIType UIType);
 
 protected:
-	// todo : 추후 다시 확인해 보기. 생성자 문제인거로 일단 확인 완료
 	// UI 생성
 	UUIWidgetBase* CreateUI(EUIType UIType);
 
-	// UI 레이어 정보 초기화
-	void InitializeUILayerInfo();
-
-	// UI 위젯 클래스 등록
-	void InitializeWidgetClasses();
+	// 위젯 정보 초기화
+	void InitializeWidgetInfo();
 
 	// 입력 모드 업데이트
 	void UpdateInputMode();

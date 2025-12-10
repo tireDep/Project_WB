@@ -17,10 +17,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetDialogueIndex(ECharacterID CharacterID);
 
-	// 대사 정보 설정
-	UFUNCTION(BlueprintCallable)
-	void SetDialogueTextInfo(ECharacterID CharacterID, UUserWidget* Widget);
-
 protected:
 	virtual void BeginPlay() override;
 
