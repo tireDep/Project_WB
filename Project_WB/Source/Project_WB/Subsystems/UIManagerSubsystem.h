@@ -45,6 +45,9 @@ class PROJECT_WB_API UUIManagerSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+	UUIManagerSubsystem();
+	virtual ~UUIManagerSubsystem();
+	
 	// Subsystem 초기화
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;

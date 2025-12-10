@@ -39,10 +39,19 @@ public:
 	void OnItemNoteButtonClicked();
 
 protected:
+	// UI 표시 될 때 호출 함수
 	virtual void OnShow_Implementation() override;
+
+	// UI 끌 때 호출 함수
 	virtual void OnHide_Implementation() override;
+
+	// 초기화 시 호출 함수
 	virtual void OnInitialize_Implementation() override;
+
+	// 포커스 얻을 때 호출 함수
 	virtual void OnGaindFocus_Implementation() override;
+
+	// 포커스 잃을 때 호출 함수
 	virtual void OnLostFocus_Implementation() override;
 
 	// 현재 대화 정보

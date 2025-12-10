@@ -3,9 +3,19 @@
 
 #include "API_DebugUtils.h"
 #include "Kismet/GameplayStatics.h"
-#include "Project_WB/Characters/Player/PlayerActor.h"
-#include "Project_WB/UI/DialogueWidget.h"
+// #include "Project_WB/Characters/Player/PlayerActor.h"
+// #include "Project_WB/UI/DialogueWidget.h"
 #include "Project_WB/UI/UIWidgetBase.h"
+
+UUIManagerSubsystem::UUIManagerSubsystem()
+{
+	InitializeUILayerInfo();
+	InitializeWidgetClasses();
+}
+
+UUIManagerSubsystem::~UUIManagerSubsystem()
+{
+}
 
 // 초기화
 void UUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -17,9 +27,6 @@ void UUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	UILayerInfoMap.Empty();
 	CurrentFocusedUI = nullptr;
 	VisibleUIList.Empty();
-	
-	InitializeUILayerInfo();
-	InitializeWidgetClasses();
 
 	FAPI_DebugUtils::ShowInfo( "UUIManagerSubsystem::Initialize" );
 }
@@ -112,16 +119,21 @@ UUIWidgetBase* UUIManagerSubsystem::GetUIWidget(EUIType UIType)
 void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus)
 {
 	// UI 가져오기
-	UUIWidgetBase* ReturnWidget = GetUIWidget(UIType);
-	if (ReturnWidget == nullptr)
+	UUIWidgetBase* ShowUI = GetUIWidget(UIType);
+	if (ShowUI == nullptr)
 	{
-		FString TypeStringForError = *UEnum::GetValueAsString(UIType);
-		FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::SetShowUI find fail " + TypeStringForError );
-		return;
+		// 없을 경우 생성
+		ShowUI= CreateUI(UIType);
+		if (ShowUI == nullptr)
+		{
+			FString TypeStringForError = *UEnum::GetValueAsString(UIType);
+			FAPI_DebugUtils::ShowError( "UUIManagerSubsystem::SetShowUI find fail " + TypeStringForError );
+			return;
+		}
 	}
 
 	// UI 표시 제어
-	ReturnWidget->SetShowUI(bShow);
+	ShowUI->SetShowUI(bShow);
 
 	if (bShow == true)
 	{
@@ -138,7 +150,7 @@ void UUIManagerSubsystem::SetShowUI(EUIType UIType, bool bShow, bool bForceFocus
 		VisibleUIList.Remove(UIType);
 
 		// 포커스 해제된 UI였다면 다른 UI로 포커스 이동
-		if (CurrentFocusedUI == ReturnWidget)
+		if (CurrentFocusedUI == ShowUI)
 		{
 			CurrentFocusedUI = nullptr;
 
@@ -264,18 +276,12 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 	}
 
 	// 월드 컨텍스트 가져오기
-	AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
-	if (FindActor == nullptr)
-		return nullptr;
-
-	APlayerActor* PlayerActor = Cast<APlayerActor>(FindActor);
-	if (PlayerActor == nullptr)
-		return nullptr;
-
-	// FindActor->GetOwner()->getcon
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
 	if ( PC == nullptr )
+	{
+		FAPI_DebugUtils::ShowError("CreateUI: PlayerController not found");
 		return nullptr;
+	}
 
 	// 위젯 생성
 	UUIWidgetBase* NewWidget = CreateWidget<UUIWidgetBase>(PC, *WidgetClass);
@@ -288,32 +294,46 @@ UUIWidgetBase* UUIManagerSubsystem::CreateUI(EUIType UIType)
 	// UI 타입 설정
 	NewWidget->SetUIType(UIType);
 
-	// 뷰포트 추가, 기본적으로 숨김상태
-	NewWidget->AddToViewport();
+	// 기본 끄기 상태
+	NewWidget->SetVisibility(ESlateVisibility::Collapsed);
 
-	NewWidget->RemoveFromParent();
-	NewWidget->AddToViewport();
+	// ZOrder 적용 후 뷰포트 추가
+	if (FUILayerInfo* LayerInfo = UILayerInfoMap.Find(UIType))
+	{
+		NewWidget->AddToViewport(LayerInfo->ZOrder);
+	}
+	else
+	{
+		// 레이어 정보 없으면 기본값 사용
+		NewWidget->AddToViewport(0);
+	}
 
-	NewWidget->GetVisibility();
-	NewWidget->GetDesiredSize();
-	NewWidget->IsInViewport();
+	UIWidgetMap.Add(UIType, NewWidget);
 
 	return NewWidget;
 }
 
+// 기본 ZOrder 설정
 void UUIManagerSubsystem::InitializeUILayerInfo()
 {
-	// 기본 ZOrder 설정
 	// 숫자가 높을수록 상위 레이어
-	// UILayerInfoMap.Add(EUIType::UT_Dialogue, FUILayerInfo{ EUIType::UT_Invalid, 0, false }); // 참고용
-	// UILayerInfoMap.Add(EUIType::UT_Max, FUILayerInfo{ EUIType::UT_Max, 30, true }); // 참고용
-	
 	UILayerInfoMap.Add(EUIType::UT_Dialogue, FUILayerInfo{ EUIType::UT_Dialogue, 15, false });
+	UILayerInfoMap.Add(EUIType::UT_Dialogue, FUILayerInfo{ EUIType::UT_ItemNote, 20, false });
 }
 
+// 블루프린트 UI 정보 초기화
+// !생성자에서만 FClassFinder 사용 가능, 그 외의 곳에서는 크래시!
 void UUIManagerSubsystem::InitializeWidgetClasses()
 {
-	UIWidgetClasses.Add(EUIType::UT_Dialogue, UDialogueWidget::StaticClass());
+	// UI수가 많지 않아서 코드에서 호출하는 방식으로 사용
+	// todo : zorder랑 함께 테이블화 해서 로드로 변경
+	ConstructorHelpers::FClassFinder<UUIWidgetBase> DialogueBP(TEXT("/Game/Widgets/WBP_DialogueWidget"));
+	if (DialogueBP.Succeeded())
+	    UIWidgetClasses.Add(EUIType::UT_Dialogue, DialogueBP.Class);
+
+	ConstructorHelpers::FClassFinder<UUIWidgetBase> ItemNoteBP(TEXT("/Game/Widgets/WBP_ItemNoteWidget"));
+	if (ItemNoteBP.Succeeded())
+		UIWidgetClasses.Add(EUIType::UT_ItemNote, ItemNoteBP.Class);
 }
 
 void UUIManagerSubsystem::UpdateInputMode()

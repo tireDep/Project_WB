@@ -8,6 +8,7 @@ enum class EUIType : uint8
 {
 	UT_Invalid = 0,
 	UT_Dialogue,
+	UT_ItemNote,
 	UT_Max
 };
 
@@ -16,5 +17,6 @@ enum class EUILayer : uint8
 {
 	UL_Invalid = 0,
 	UL_Dialog,
+	UL_ItemNote,
 	UI_Max
 };

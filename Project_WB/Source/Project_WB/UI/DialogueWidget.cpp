@@ -2,6 +2,8 @@
 #include "DialogueWidget.h"
 
 #include "API_DebugUtils.h"
+#include "InteractiveToolQueryInterfaces.h"
+#include "ItemNoteWidget.h"
 #include "PaperSprite.h" 
 #include "Components/Button.h"
 #include "Components/Image.h"
@@ -197,6 +199,11 @@ void UDialogueWidget::OnExitButtonClicked()
 // 대화 창 위에 탐정 수첩이 '기본 상태'로 열림
 void UDialogueWidget::OnItemNoteButtonClicked()
 {
+	UUIManagerSubsystem* UIManager = GetUISubsystem();
+	if (UIManager == nullptr)
+		return;
+
+	UIManager->SetShowUI( EUIType::UT_ItemNote, true );
 }
 
 // UI 열때 , 블루프린트 추가 구현 가능
@@ -243,6 +250,10 @@ void UDialogueWidget::OnInitialize_Implementation()
 	// 대화 종료 버튼 함수 지정
 	if (ExitButton != nullptr)
 		ExitButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnExitButtonClicked);
+
+	// 아이템 획득 시 탐정 수첩 표시 버튼 함수 지정
+	if (ItemNoteButton != nullptr)
+		ItemNoteButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnItemNoteButtonClicked);
 }
 
 // 포커스 획득, 블루프린트 추가 구현 가능
