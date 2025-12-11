@@ -5,6 +5,8 @@
 #include "ItemNoteWidget.generated.h"
 
 class UImage;
+class UTextBlock;
+class UButton;
 
 UCLASS()
 class PROJECT_WB_API UItemNoteWidget : public UUIWidgetBase
@@ -27,9 +29,23 @@ protected:
 	virtual void OnInitialize_Implementation() override;
 
 	// 위젯 바인딩(UMG 에디터에서 생성한 컴포넌트)
-	// 테스트용 이미지
+	// 닫기 버튼
 	UPROPERTY(meta = (BindWidget))
-	UImage* TestImage;
+	UButton* CloseButton;
+
+	// 아이템 정보 이미지
+	UPROPERTY(meta = (BindWidget))
+	UImage* ItemInfoImage;
+
+	// 아이템 정보 텍스트
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* ItemInfoText;
+
+	// // 아이템 버튼
+	// 없음,  _1 ~ _8 까지 존재
+	// UPROPERTY(meta = (BindWidget))
+	// UButton* ItemButton;
+
 private:
 	
 };

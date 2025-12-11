@@ -62,7 +62,10 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 	// 플레이어 상태 변경
 	PlayerActor->SetState(PlayerState::PS_TALKING_ITEM);
 	
-	// todo : 이미 수집한 아이템인지 체크 필요
+	// 이미 수집한 아이템인지 체크
+	if (PlayerActor->CheckGainedItemInfo(this->ItemID) == true)
+		return;
+	
 	ECharacterID CharacterID = PlayerActor->GetCharacterID();
 	auto DialogKey = DialogInfo.Find( CharacterID );
 	if (DialogKey == nullptr)
