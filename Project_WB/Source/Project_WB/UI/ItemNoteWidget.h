@@ -16,7 +16,25 @@ class PROJECT_WB_API UItemNoteWidget : public UUIWidgetBase
 public:
 	UItemNoteWidget(const FObjectInitializer& ObjectInitializer);
 
-public:
+	// 아이템 버튼 선택시_아이템 정보 업데이트
+	UFUNCTION(BlueprintCallable, Category="ItemNote")
+	void OnItemButtonClicked();
+
+	// 카테고리 버튼 선택시_카테고리 업데이트
+	UFUNCTION(BlueprintCallable, Category="ItemNote")
+	void OnCategoryButtonClicked();
+
+	// 닫기 버튼 선택시_UI 닫기
+	UFUNCTION(BlueprintCallable, Category="ItemNote")
+	void OnCloseButtonClicked();
+	
+	// 이전 페이지 버튼 선택시_이전 페이지 이동
+	UFUNCTION(BlueprintCallable, Category="ItemNote")
+	void OnPrevPageButtonClicked();
+	
+	// 다음 페이지 버튼 선택시_다음 페이지 이동
+	UFUNCTION(BlueprintCallable, Category="ItemNote")
+	void OnNextPageButtonClicked();
 
 protected:
 	// UI 표시 될 때 호출 함수
@@ -41,11 +59,28 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ItemInfoText;
 
-	// // 아이템 버튼
-	// 없음,  _1 ~ _8 까지 존재
-	// UPROPERTY(meta = (BindWidget))
-	// UButton* ItemButton;
+	// 이전 페이지 버튼
+	UPROPERTY(meta = (BindWidget))
+	UButton* PrevPageButton;
+	
+	// 다음 페이지 버튼
+	UPROPERTY(meta = (BindWidget))
+	UButton* NextPageButton;
+	
+	// 페이지 텍스트
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* PageText;
 
 private:
-	
+	// 아이템 버튼들
+	UPROPERTY(meta = (BindWidget))
+	TArray<UButton*> ItemButtons;
+
+	// 카테고리 버튼들
+	UPROPERTY(meta = (BindWidget))
+    TArray<UButton*> CategoryButtons;
+
+	// 카테고리 배경 이미지들
+	UPROPERTY(meta = (BindWidget))
+	TArray<UImage*> CategoryExpandedImages;
 };
