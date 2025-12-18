@@ -55,12 +55,12 @@ void ABasicItem::OnItemMouseClick(AActor* Actor)
 	if (GameManager == nullptr)
 		return;
 		
-	APlayerActor* PlayerActor = GameManager->GetPlayerActor();
+	TWeakObjectPtr<APlayerActor> PlayerActor = GameManager->GetPlayerActor();
 	if (PlayerActor == nullptr)
 		return;
 		
 	// 플레이어 상태 변경
-	PlayerActor->SetState(PlayerState::PS_TALKING_ITEM);
+	PlayerActor->SetState(EPlayerState::PS_TALKING_ITEM);
 	
 	// 이미 수집한 아이템인지 체크
 	if (PlayerActor->CheckGainedItemInfo(this->ItemID) == true)

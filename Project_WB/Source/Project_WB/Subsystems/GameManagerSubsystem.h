@@ -17,8 +17,10 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	APlayerActor* GetPlayerActor();
+	const TWeakObjectPtr<APlayerActor> GetPlayerActor();
+
+	void NotifyDialogueResult(const FDialogueResult& Result);
 
 private:
-	APlayerActor* PlayerActor;
+	TWeakObjectPtr<APlayerActor> CachedPlayerActor;
 };

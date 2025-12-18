@@ -3,12 +3,39 @@
 
 #include "CoreMinimal.h"
 #include "UIWidgetBase.h"
+#include "Project_WB/Characters/Player/PlayerActor.h"
 #include "DialogueWidget.generated.h"
 
+enum class EPlayerState : uint8;
 class UTextBlock;
 class UImage;
 class UButton;
 class APlayerActor;
+
+USTRUCT(BlueprintType)
+struct FDialogueResult
+{
+	GENERATED_BODY()
+
+	// 획득한 아이템
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int GainItemID;
+
+	// 변경할 플레이어 상태
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EPlayerState ChangeState;
+
+	FDialogueResult()
+	{
+		Init();
+	}
+
+	void Init()
+	{
+		GainItemID		= 0;
+		ChangeState		= EPlayerState::PS_INVALID;
+	}
+};
 
 UCLASS()
 class PROJECT_WB_API UDialogueWidget : public UUIWidgetBase
@@ -102,7 +129,4 @@ protected:
 private:
 	// 마지막 대사인지 체크
 	bool CheckIsFinalScript(const FDialogueTableData* PtDialogueTableData);
-
-	UPROPERTY()
-	APlayerActor* PlayerActor;
 };

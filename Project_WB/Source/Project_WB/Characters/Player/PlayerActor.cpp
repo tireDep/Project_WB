@@ -1,13 +1,14 @@
 ﻿
 #include "PlayerActor.h"
 
-#include "Algo/ForEach.h"
+#include "InteractionComponent.h"
 
 APlayerActor::APlayerActor()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	CurrentState = PlayerState::PS_IDLE;
+	CurrentState = EPlayerState::PS_IDLE;
 	ItemInformations.Empty();
+	InteractionComp = CreateDefaultSubobject<UInteractionComponent>(TEXT("InteractionComponent"));
 }
 
 void APlayerActor::BeginPlay()
@@ -27,7 +28,7 @@ void APlayerActor::AddGainedItem(int ItemID)
 	if (CheckGainedItemInfo(ItemID) == true)
 		return;
 
-	ItemInformation ItemInfo;
+	FItemInformation ItemInfo;
 	ItemInfo.ItemID = ItemID;
 	ItemInformations.Add(ItemInfo);
 }
@@ -36,7 +37,7 @@ void APlayerActor::AddGainedItem(int ItemID)
 bool APlayerActor::CheckGainedItemInfo(int ItemID, ECharacterID CheckCharacterID/*= ECharacterID::CI_INVALID*/)
 {
 	// 보유한 아이템인지 체크
-	for (ItemInformation ItemInfo : ItemInformations)
+	for (FItemInformation ItemInfo : ItemInformations)
 	{
 		if (ItemInfo.ItemID != ItemID)
 			continue;
@@ -57,7 +58,7 @@ bool APlayerActor::CheckGainedItemInfo(int ItemID, ECharacterID CheckCharacterID
 // 아이템 정보 업데이트
 void APlayerActor::UpdateGainedItemInfo(int ItemID, ECharacterID UpdateCharacterID)
 {
-	for (ItemInformation ItemInfo : ItemInformations)
+	for (FItemInformation ItemInfo : ItemInformations)
 	{
 		if (ItemInfo.ItemID != ItemID)
 			continue;

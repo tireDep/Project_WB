@@ -21,6 +21,10 @@ UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer) : 
 // UI 업데이트
 void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 {
+	UGameManagerSubsystem* GM = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>();
+	if (GM == nullptr)
+		return;
+	
 	UStringManagerSubsystem* StringManager = GetGameInstance()->GetSubsystem<UStringManagerSubsystem>();
 	if ( StringManager == nullptr )
 		return;
@@ -110,15 +114,17 @@ void UDialogueWidget::UpdateDialogueText(int DialogueIndex)
 		ItemNoteButton->SetVisibility(ESlateVisibility::Visible);
 
 		// 아이템 획득 처리
-		if (PlayerActor != nullptr)
-			PlayerActor->AddGainedItem(CurScriptTableData->GainItemID);
+		FDialogueResult Result;
+		Result.GainItemID = CurScriptTableData->GainItemID;
+		GM->NotifyDialogueResult(Result);
 	}
 
 	// 마지막 대사인 경우, 스테이트 상태에 따라 버튼 표시 제어
 	if (CheckIsFinalScript(CurDialogueTableData))
 	{
 		// NPC와 대화중인 경우
-		if (PlayerActor != nullptr && PlayerActor->GetState() == PlayerState::PS_TALKING_NPC)
+		const TWeakObjectPtr<APlayerActor> PlayerActor = GM->GetPlayerActor();
+		if (PlayerActor != nullptr && PlayerActor->GetState() == EPlayerState::PS_TALKING_NPC)
 		{
 			// 아이템 제시 버튼
 			SuggestButton->SetVisibility(ESlateVisibility::Visible);
@@ -216,12 +222,6 @@ void UDialogueWidget::OnShow_Implementation()
 
 	if (CharacterImageLeft != nullptr)
 		CharacterImageLeft->SetVisibility(ESlateVisibility::Hidden);
-	
-	UGameManagerSubsystem* GameManager = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>();
-	if (GameManager == nullptr)
-		return;
-
-	PlayerActor = GameManager->GetPlayerActor();
 }
 
 // UI 닫을 때, 블루프린트 추가 구현 가능
@@ -230,8 +230,12 @@ void UDialogueWidget::OnHide_Implementation()
 	Super::OnHide_Implementation();
 
 	// 기본 상태로 변경
-	if (PlayerActor != nullptr)
-		PlayerActor->SetState(PlayerState::PS_IDLE);
+	if (UGameManagerSubsystem* GM = GetGameInstance()->GetSubsystem<UGameManagerSubsystem>())
+	{
+		FDialogueResult Result;
+		Result.ChangeState = EPlayerState::PS_IDLE;
+		GM->NotifyDialogueResult(Result);
+	}
 }
 
 // UI 초기화 할 때, 블루프린트 추가 구현 가능

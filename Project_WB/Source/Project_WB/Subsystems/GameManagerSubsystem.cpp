@@ -4,6 +4,7 @@
 #include "GameManagerSubsystem.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Project_WB/Characters/Player/InteractionComponent.h"
 #include "Project_WB/Characters/Player/PlayerActor.h"
 
 UGameManagerSubsystem::UGameManagerSubsystem()
@@ -21,14 +22,26 @@ void UGameManagerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-APlayerActor* UGameManagerSubsystem::GetPlayerActor()
+const TWeakObjectPtr<APlayerActor> UGameManagerSubsystem::GetPlayerActor()
 {
-	if (PlayerActor != nullptr)
-		return PlayerActor;
+	if (CachedPlayerActor != nullptr)
+		return CachedPlayerActor;
 	
 	AActor* FindActor = UGameplayStatics::GetActorOfClass(GetWorld(),APlayerActor::StaticClass());
 	if (FindActor != nullptr)
-		PlayerActor = Cast<APlayerActor>(FindActor);
+		CachedPlayerActor = Cast<APlayerActor>(FindActor);
 
-	return PlayerActor;
+	return CachedPlayerActor;
+}
+
+
+void UGameManagerSubsystem::NotifyDialogueResult(const FDialogueResult& Result)
+{
+	if (CachedPlayerActor.IsValid() == false)
+		return;
+
+	if (UInteractionComponent* InterComp = CachedPlayerActor->GetInteractionComponent())
+	{
+		InterComp->HandleDialogueResult(Result);
+	}
 }
