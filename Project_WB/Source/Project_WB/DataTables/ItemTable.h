@@ -7,6 +7,7 @@
 UENUM(BlueprintType)
 enum class EItemCategory : uint8
 {
+	IC_INVALID,
 	IC_BASIC,		// 기본 정보
 	IC_MAP,			// 맵에서 수집
 	IC_DIALOGUE,	// 대화 중 수집
